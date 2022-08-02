@@ -1,0 +1,18 @@
+set(TARGET COMPILE_SHADERS)
+
+file(GLOB SHADERS *.frag *.vert)
+
+add_custom_target(${TARGET} ALL
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+foreach(shader ${SHADERS})
+    file(RELATIVE_PATH file ${CMAKE_CURRENT_SOURCE_DIR} ${shader})
+
+    add_custom_command(TARGET ${TARGET} POST_BUILD
+
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders/${file}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endforeach()
