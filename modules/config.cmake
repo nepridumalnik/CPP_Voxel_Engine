@@ -8,10 +8,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include_directories(pch)
+include_directories(pch ${GLEW_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS})
 
 add_compile_options(-Winvalid-pch)
-# add_compile_options(-ftime-report)
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT supported OUTPUT error)

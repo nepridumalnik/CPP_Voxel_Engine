@@ -1,15 +1,16 @@
 #include <graphics/Shader.hpp>
 
-#include <fstream>
-#include <sstream>
+#include <utils/loaders.hpp>
+
 #include <stdexcept>
 
 static constexpr uint32_t BufferSize = 512;
 static constexpr char ShaderDirectory[] = "shaders/";
 
-Shader::Shader(uint32_t id) : id_(id)
+namespace graphics
 {
-}
+
+Shader::Shader(uint32_t id) : id_(id) {}
 
 Shader::~Shader()
 {
@@ -21,13 +22,39 @@ void Shader::Use()
     glUseProgram(id_);
 }
 
-std::shared_ptr<Shader> Shader::LoadShader(const std::string &vFile, const std::string &fFile)
+uint32_t Shader::createShader(const std::string &shaderSource, uint32_t type)
 {
-    std::string vSrc = readShaderSource(vFile);
-    std::string fSrc = readShaderSource(fFile);
+    uint32_t shaderId;
+    if (0 == (shaderId = glCreateShader(type)))
+    {
+        throw std::runtime_error("Failed to create shader with type: " + std::to_string(type));
+    }
 
-    uint32_t vShader = createShader(vSrc, GL_VERTEX_SHADER);
-    uint32_t fShader = createShader(fSrc, GL_FRAGMENT_SHADER);
+    int32_t result;
+    char log[BufferSize];
+    const char *ptr[] = {shaderSource.c_str()};
+
+    glShaderSource(shaderId, 1, ptr, nullptr);
+    glCompileShader(shaderId);
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+
+    if (GL_FALSE == result)
+    {
+        glGetShaderInfoLog(shaderId, sizeof(log), nullptr, log);
+        glDeleteShader(shaderId);
+        throw std::runtime_error(std::string("Failed to compile shader with error: ") + log);
+    }
+
+    return shaderId;
+}
+
+std::shared_ptr<Shader> LoadShader(const std::string &vFile, const std::string &fFile)
+{
+    std::string vSrc = utils::LoadFile(ShaderDirectory + vFile);
+    std::string fSrc = utils::LoadFile(ShaderDirectory + fFile);
+
+    uint32_t vShader = Shader::createShader(vSrc, GL_VERTEX_SHADER);
+    uint32_t fShader = Shader::createShader(fSrc, GL_FRAGMENT_SHADER);
 
     uint32_t programId;
 
@@ -58,43 +85,4 @@ std::shared_ptr<Shader> Shader::LoadShader(const std::string &vFile, const std::
     return std::make_shared<Shader>(programId);
 }
 
-std::string Shader::readShaderSource(const std::string &file)
-{
-    std::ifstream shaderFile(ShaderDirectory + file);
-
-    if (!shaderFile.is_open())
-    {
-        throw std::runtime_error("Failed to read shader file: " + file);
-    }
-
-    std::stringstream ss;
-    ss << shaderFile.rdbuf();
-
-    return ss.str();
-}
-
-uint32_t Shader::createShader(const std::string &shaderSource, uint32_t type)
-{
-    uint32_t shaderId;
-    if (0 == (shaderId = glCreateShader(type)))
-    {
-        throw std::runtime_error("Failed to create shader with type: " + std::to_string(type));
-    }
-
-    int32_t result;
-    char log[BufferSize];
-    const char *ptr[] = {shaderSource.c_str()};
-
-    glShaderSource(shaderId, 1, ptr, nullptr);
-    glCompileShader(shaderId);
-    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
-
-    if (GL_FALSE == result)
-    {
-        glGetShaderInfoLog(shaderId, sizeof(log), nullptr, log);
-        glDeleteShader(shaderId);
-        throw std::runtime_error(std::string("Failed to compile shader with error: ") + log);
-    }
-
-    return shaderId;
-}
+} // namespace graphics

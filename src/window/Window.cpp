@@ -2,6 +2,9 @@
 
 #include <stdexcept>
 
+namespace window
+{
+
 GLFWwindow *Window::window_ = nullptr;
 
 void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
@@ -55,3 +58,5 @@ void Window::SwapBuffer()
 {
     glfwSwapBuffers(window_);
 }
+
+} // namespace window

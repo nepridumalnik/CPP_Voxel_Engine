@@ -16,10 +16,10 @@ int main(int argc, char const *argv[])
     constexpr uint32_t width = 1280;
     constexpr uint32_t height = 720;
 
-    Window::Init(width, height, "Title");
-    Events::Init();
+    window::Window::Init(width, height, "Title");
+    window::Events::Init();
 
-    std::shared_ptr<Shader> shader = Shader::LoadShader("main.vert", "main.frag");
+    std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
 
     uint32_t VAO;
     uint32_t VBO;
@@ -39,13 +39,13 @@ int main(int argc, char const *argv[])
 
     try
     {
-        while (!Window::ShouldClose())
+        while (!window::Window::ShouldClose())
         {
-            Events::PollEvents();
+            window::Events::PollEvents();
 
-            if (Events::JPressed(GLFW_KEY_ESCAPE))
+            if (window::Events::JPressed(GLFW_KEY_ESCAPE))
             {
-                Window::ShouldClose(true);
+                window::Window::ShouldClose(true);
             }
 
             glClear(GL_COLOR_BUFFER_BIT);
@@ -56,7 +56,7 @@ int main(int argc, char const *argv[])
 
             glBindVertexArray(0);
 
-            Window::SwapBuffer();
+            window::Window::SwapBuffer();
         }
     }
     catch (const std::exception &e)
@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
         std::cerr << e.what() << std::endl;
     }
 
-    Window::Terminate();
+    window::Window::Terminate();
 
     return 0;
 }

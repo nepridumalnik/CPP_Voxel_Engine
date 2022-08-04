@@ -1,5 +1,8 @@
 #include <window/Events.hpp>
 
+namespace window
+{
+
 static constexpr uint32_t MouseButtons = 12;
 
 static constexpr uint32_t NumberOfKeys = 1024;
@@ -67,8 +70,6 @@ void Events::PollEvents()
     Events::deltaX = Events::deltaY = 0;
 
     glfwPollEvents();
-
-    
 }
 
 bool Events::Pressed(int32_t key)
@@ -90,3 +91,5 @@ bool Events::JPressed(int32_t key)
 
     return Events::keys[key].first;
 }
+
+} // namespace window

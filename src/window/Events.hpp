@@ -2,7 +2,12 @@
 
 #include <window/Window.hpp>
 
-class Events
+#include <utils/macros.hpp>
+
+namespace window
+{
+
+class EXPORT Events
 {
 public:
     static std::pair<bool, uint32_t> keys[];
@@ -24,3 +29,5 @@ private:
     static void mouseCallback(GLFWwindow *window, int button, int action, int mods);
     static void cursorCallback(GLFWwindow *window, double xPos, double yPos);
 };
+
+} // namespace window

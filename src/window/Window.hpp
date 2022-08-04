@@ -1,12 +1,15 @@
 #pragma once
 
-#include <macros.hpp>
+#include <utils/macros.hpp>
 
 #include <string>
 
 struct GLFWwindow;
 
-class Window
+namespace window
+{
+
+class EXPORT Window
 {
 public:
     static void Init(uint32_t w, uint32_t h, const std::string &windowName);
@@ -20,3 +23,5 @@ private:
 
     friend class Events;
 };
+
+} // namespace window
