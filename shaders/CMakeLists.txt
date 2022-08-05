@@ -1,4 +1,4 @@
-set(TARGET COMPILE_SHADERS)
+set(TARGET SHADERS)
 
 file(GLOB SHADERS *.frag *.vert)
 
