@@ -23,6 +23,8 @@ int main(int argc, char const *argv[])
     constexpr uint32_t width = 1280;
     constexpr uint32_t height = 720;
     static constexpr float speed = 0.5f;
+    static constexpr float rotationLimit = 89.99f;
+    static constexpr float mouseSpeed = 0.5f;
 
     window::Window::Init(width, height, "Title");
     window::Events::Init();
@@ -62,7 +64,8 @@ int main(int argc, char const *argv[])
     float camX = 0.0f;
     float camY = 0.0f;
 
-    bool cursorLocked = false;
+    bool cursorLocked = true;
+    window::Events::SetCursorLocked(cursorLocked);
 
     try
     {
@@ -108,20 +111,20 @@ int main(int argc, char const *argv[])
 
             if (window::Events::IsCursorLocked())
             {
-                camY = -window::Events::GetDeltaY() / window::Window::GetHeight() / 10;
-                camX = -window::Events::GetDeltaX() / window::Window::GetHeight() / 10;
+                camY -= window::Events::GetDeltaY() / window::Window::GetHeight() * mouseSpeed;
+                camX -= window::Events::GetDeltaX() / window::Window::GetHeight() * mouseSpeed;
 
-                if (camY < -glm::radians(89.0f))
+                if (camY < -glm::radians(rotationLimit))
                 {
-                    camY = -glm::radians(89.0f);
+                    camY = -glm::radians(rotationLimit);
                 }
-                if (camY > glm::radians(89.0f))
+                if (camY > glm::radians(rotationLimit))
                 {
-                    camY = glm::radians(89.0f);
+                    camY = glm::radians(rotationLimit);
                 }
 
-                // camera->SetRotation(glm::mat4(0.0f));
-                camera->Rotate(camY, camX, 0);
+                camera->SetRotation(glm::mat4(1.0f));
+                camera->Rotate(camX, camY, 0);
             }
 
             glClear(GL_COLOR_BUFFER_BIT);
