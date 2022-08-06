@@ -28,6 +28,7 @@ private:
     static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
     static void mouseCallback(GLFWwindow *window, int button, int action, int mods);
     static void cursorCallback(GLFWwindow *window, double xPos, double yPos);
+    static void windowCallback(GLFWwindow *window, int width, int height);
 };
 
 } // namespace window

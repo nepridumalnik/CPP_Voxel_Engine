@@ -20,7 +20,7 @@ set(LIBRARY_SOURCES
 )
 set(PRECOMPILE_HEADERS
     ${CMAKE_SOURCE_DIR}/pch/OpenGL.hpp
-    # ${CMAKE_SOURCE_DIR}/pch/GLM.hpp
+    ${CMAKE_SOURCE_DIR}/pch/GLM.hpp
 )
 set(LIBRARIES
     glfw

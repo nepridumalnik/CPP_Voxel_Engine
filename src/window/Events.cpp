@@ -27,6 +27,11 @@ void Events::cursorCallback(GLFWwindow *window, double xPos, double yPos)
     Events::deltaY += yPos - Events::y;
 }
 
+void Events::windowCallback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 void Events::mouseCallback(GLFWwindow *window, int button, int action, int mods)
 {
     switch (action)
@@ -62,6 +67,7 @@ void Events::Init()
     glfwSetKeyCallback(Window::window_, Events::keyCallback);
     glfwSetMouseButtonCallback(Window::window_, Events::mouseCallback);
     glfwSetCursorPosCallback(Window::window_, Events::cursorCallback);
+    glfwSetWindowSizeCallback(Window::window_, Events::windowCallback);
 }
 
 void Events::PollEvents()

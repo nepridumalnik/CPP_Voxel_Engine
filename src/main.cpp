@@ -54,8 +54,6 @@ int main(int argc, char const *argv[])
     {
         while (!window::Window::ShouldClose())
         {
-            window::Events::PollEvents();
-
             if (window::Events::JPressed(GLFW_KEY_ESCAPE))
             {
                 window::Window::ShouldClose(true);
@@ -71,6 +69,7 @@ int main(int argc, char const *argv[])
 
             glBindVertexArray(0);
 
+            window::Events::PollEvents();
             window::Window::SwapBuffer();
         }
     }
