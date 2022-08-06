@@ -7,22 +7,7 @@
 static constexpr uint32_t BufferSize = 512;
 static constexpr char ShaderDirectory[] = "shaders/";
 
-namespace graphics
-{
-
-Shader::Shader(uint32_t id) : id_(id) {}
-
-Shader::~Shader()
-{
-    glDeleteProgram(id_);
-}
-
-void Shader::Use()
-{
-    glUseProgram(id_);
-}
-
-uint32_t Shader::createShader(const std::string &shaderSource, uint32_t type)
+uint32_t CreateShader(const std::string &shaderSource, uint32_t type)
 {
     uint32_t shaderId;
     if (0 == (shaderId = glCreateShader(type)))
@@ -48,13 +33,28 @@ uint32_t Shader::createShader(const std::string &shaderSource, uint32_t type)
     return shaderId;
 }
 
+namespace graphics
+{
+
+Shader::Shader(uint32_t id) : id_(id) {}
+
+Shader::~Shader()
+{
+    glDeleteProgram(id_);
+}
+
+void Shader::Use()
+{
+    glUseProgram(id_);
+}
+
 std::shared_ptr<Shader> LoadShader(const std::string &vFile, const std::string &fFile)
 {
     std::string vSrc = utils::LoadFile(ShaderDirectory + vFile);
     std::string fSrc = utils::LoadFile(ShaderDirectory + fFile);
 
-    uint32_t vShader = Shader::createShader(vSrc, GL_VERTEX_SHADER);
-    uint32_t fShader = Shader::createShader(fSrc, GL_FRAGMENT_SHADER);
+    uint32_t vShader = CreateShader(vSrc, GL_VERTEX_SHADER);
+    uint32_t fShader = CreateShader(fSrc, GL_FRAGMENT_SHADER);
 
     uint32_t programId;
 
