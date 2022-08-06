@@ -53,10 +53,9 @@ int main(int argc, char const *argv[])
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
 
     std::shared_ptr<window::Camera> camera =
-        std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(90.0f));
+        std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(75.0f));
 
-    glm::mat4 model(1.0f);
-    model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
 
     float lastTime = glfwGetTime();
     float delta = 0.0f;
@@ -79,33 +78,32 @@ int main(int argc, char const *argv[])
             }
             if (window::Events::JPressed(GLFW_KEY_TAB))
             {
-                window::Events::SetCursorLocked(cursorLocked);
-                cursorLocked = !cursorLocked;
+                window::Events::SetCursorLocked(cursorLocked = !cursorLocked);
             }
 
             if (window::Events::Pressed(GLFW_KEY_W))
             {
-                glm::vec3 position = camera->GetPosition();
-                position += camera->GetFront() * speed * delta;
-                camera->SetPosition(position);
+                camera->SetPosition(camera->GetPosition() + camera->GetFront() * speed * delta);
             }
             if (window::Events::Pressed(GLFW_KEY_S))
             {
-                glm::vec3 position = camera->GetPosition();
-                position -= camera->GetFront() * speed * delta;
-                camera->SetPosition(position);
+                camera->SetPosition(camera->GetPosition() - camera->GetFront() * speed * delta);
             }
             if (window::Events::Pressed(GLFW_KEY_A))
             {
-                glm::vec3 position = camera->GetPosition();
-                position += camera->GetRight() * speed * delta;
-                camera->SetPosition(position);
+                camera->SetPosition(camera->GetPosition() - camera->GetRight() * speed * delta);
             }
             if (window::Events::Pressed(GLFW_KEY_D))
             {
-                glm::vec3 position = camera->GetPosition();
-                position -= camera->GetRight() * speed * delta;
-                camera->SetPosition(position);
+                camera->SetPosition(camera->GetPosition() + camera->GetRight() * speed * delta);
+            }
+            if (window::Events::Pressed(GLFW_KEY_E))
+            {
+                camera->SetPosition(camera->GetPosition() + camera->GetUp() * speed * delta);
+            }
+            if (window::Events::Pressed(GLFW_KEY_Q))
+            {
+                camera->SetPosition(camera->GetPosition() - camera->GetUp() * speed * delta);
             }
 
             if (window::Events::IsCursorLocked())
@@ -122,7 +120,7 @@ int main(int argc, char const *argv[])
                     camY = glm::radians(89.0f);
                 }
 
-                // camera->SetRotation(glm::mat4(1.0f));
+                // camera->SetRotation(glm::mat4(0.0f));
                 camera->Rotate(camY, camX, 0);
             }
 
@@ -130,12 +128,12 @@ int main(int argc, char const *argv[])
 
             shader->Use();
             shader->UniformMatrix("model", model);
-            shader->UniformMatrix("projView", camera->GetProjection() * camera->GetView());
+            shader->UniformMatrix("projection", camera->GetProjection());
+            shader->UniformMatrix("view", camera->GetView());
             texture->Bind();
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-
             glBindVertexArray(0);
 
             window::Window::SwapBuffer();

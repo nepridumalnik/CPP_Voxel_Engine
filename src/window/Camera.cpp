@@ -7,7 +7,8 @@
 namespace window
 {
 
-Camera::Camera(const glm::vec3 &position, float fieldOfView) : position_(position), rotation_(1.0f)
+Camera::Camera(const glm::vec3 &position, float fieldOfView)
+    : position_(position), rotation_(1.0f), fov_(fieldOfView)
 {
     updateVectors();
 }
@@ -21,9 +22,9 @@ void Camera::updateVectors()
 
 void Camera::Rotate(float x, float y, float z)
 {
-    rotation_ = glm::rotate(rotation_, -x, glm::vec3(1.0f, 0.0f, 0.0f));
-    rotation_ = glm::rotate(rotation_, -y, glm::vec3(0.0f, 1.0f, 0.0f));
     rotation_ = glm::rotate(rotation_, z, glm::vec3(0.0f, 0.0f, 1.0f));
+    rotation_ = glm::rotate(rotation_, y, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotation_ = glm::rotate(rotation_, x, glm::vec3(1.0f, 0.0f, 0.0f));
 
     updateVectors();
 }
