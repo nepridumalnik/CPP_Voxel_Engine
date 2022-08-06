@@ -30,6 +30,9 @@ void Events::cursorCallback(GLFWwindow *window, double xPos, double yPos)
 void Events::windowCallback(GLFWwindow *window, int width, int height)
 {
     glViewport(0, 0, width, height);
+
+    Window::width_ = width;
+    Window::height_ = height;
 }
 
 void Events::mouseCallback(GLFWwindow *window, int button, int action, int mods)
@@ -85,7 +88,7 @@ bool Events::Pressed(int32_t key)
         return false;
     }
 
-    return Events::keys[key].first && Events::current == Events::keys[key].second;
+    return Events::keys[key].first;
 }
 
 bool Events::JPressed(int32_t key)
@@ -95,7 +98,7 @@ bool Events::JPressed(int32_t key)
         return false;
     }
 
-    return Events::keys[key].first;
+    return Events::keys[key].first && Events::current == Events::keys[key].second;
 }
 
 } // namespace window

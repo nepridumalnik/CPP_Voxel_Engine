@@ -10,6 +10,7 @@ set(LIBRARY_SOURCES
     # window
     window/Window.cpp
     window/Events.cpp
+    window/Camera.cpp
 
     # graphics
     graphics/Shader.cpp

@@ -21,7 +21,11 @@ public:
 private:
     static GLFWwindow *window_;
 
+    static uint32_t width_;
+    static uint32_t height_;
+
     friend class Events;
+    friend class Camera;
 };
 
 } // namespace window

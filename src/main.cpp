@@ -1,3 +1,4 @@
+#include <window/Camera.hpp>
 #include <window/Events.hpp>
 #include <window/Window.hpp>
 
@@ -50,6 +51,13 @@ int main(int argc, char const *argv[])
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
 
+    std::shared_ptr<window::Camera> camera =
+        std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(40.0f));
+
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+
     try
     {
         while (!window::Window::ShouldClose())
@@ -59,9 +67,36 @@ int main(int argc, char const *argv[])
                 window::Window::ShouldClose(true);
             }
 
+            if (window::Events::Pressed(GLFW_KEY_S))
+            {
+                glm::vec3 position = camera->GetPosition();
+                position.z -= 0.002f;
+                camera->SetPosition(position);
+            }
+            if (window::Events::Pressed(GLFW_KEY_W))
+            {
+                glm::vec3 position = camera->GetPosition();
+                position.z += 0.002f;
+                camera->SetPosition(position);
+            }
+            if (window::Events::Pressed(GLFW_KEY_A))
+            {
+                glm::vec3 position = camera->GetPosition();
+                position.x -= 0.006f;
+                camera->SetPosition(position);
+            }
+            if (window::Events::Pressed(GLFW_KEY_D))
+            {
+                glm::vec3 position = camera->GetPosition();
+                position.x += 0.006f;
+                camera->SetPosition(position);
+            }
+
             glClear(GL_COLOR_BUFFER_BIT);
 
             shader->Use();
+            shader->UniformMatrix("model", model);
+            shader->UniformMatrix("projView", camera->GetProjection() * camera->GetView());
             texture->Bind();
 
             glBindVertexArray(VAO);

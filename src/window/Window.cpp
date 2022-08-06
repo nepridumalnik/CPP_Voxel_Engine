@@ -6,6 +6,8 @@ namespace window
 {
 
 GLFWwindow *Window::window_ = nullptr;
+uint32_t Window::width_ = 0;
+uint32_t Window::height_ = 0;
 
 void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
 {
@@ -19,7 +21,11 @@ void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
     // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window_ = glfwCreateWindow(w, h, windowName.c_str(), nullptr, nullptr);
+    Window::width_ = w;
+    Window::height_ = h;
+
+    window_ =
+        glfwCreateWindow(Window::width_, Window::height_, windowName.c_str(), nullptr, nullptr);
 
     if (nullptr == window_)
     {
@@ -36,7 +42,7 @@ void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
         throw std::runtime_error("Failed to initialize GLEW");
     }
 
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, Window::width_, Window::height_);
 }
 
 void Window::Terminate()

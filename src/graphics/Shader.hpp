@@ -16,6 +16,7 @@ public:
     ~Shader();
 
     void Use();
+    void UniformMatrix(const std::string &name, glm::mat4 model);
 
 private:
     uint32_t id_;
