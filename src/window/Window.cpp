@@ -6,8 +6,9 @@ namespace window
 {
 
 GLFWwindow *Window::window_ = nullptr;
-uint32_t Window::width_ = 0;
-uint32_t Window::height_ = 0;
+int32_t Window::width_ = 0;
+int32_t Window::height_ = 0;
+bool Window::cursorLocker_ = false;
 
 void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
 {
@@ -63,6 +64,21 @@ void Window::ShouldClose(bool flag)
 void Window::SwapBuffer()
 {
     glfwSwapBuffers(window_);
+}
+
+int32_t Window::GetWidth()
+{
+    return Window::width_;
+}
+
+int32_t Window::GetHeight()
+{
+    return Window::height_;
+}
+
+void Window::setCursorMode(int32_t mode)
+{
+    glfwSetInputMode(window_, GLFW_CURSOR, mode);
 }
 
 } // namespace window

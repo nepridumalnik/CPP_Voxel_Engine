@@ -9,19 +9,20 @@
 
 static constexpr float Vertices[] = {
     //  x     y     z     u     v
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 1
-    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 2
-    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 3
+    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, // 1
+    1.0f,  -1.0f, 0.0f, 1.0f, 0.0f, // 2
+    -1.0f, 1.0f,  0.0f, 0.0f, 1.0f, // 3
 
-    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // 4
-    1.0f, 1.0f, 0.0f, 1.0f, 1.0f, // 5
-    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // 6
+    1.0f,  -1.0f, 0.0f, 1.0f, 0.0f, // 4
+    1.0f,  1.0f,  0.0f, 1.0f, 1.0f, // 5
+    -1.0f, 1.0f,  0.0f, 0.0f, 1.0f, // 6
 };
 
 int main(int argc, char const *argv[])
 {
     constexpr uint32_t width = 1280;
     constexpr uint32_t height = 720;
+    static constexpr float speed = 0.5f;
 
     window::Window::Init(width, height, "Title");
     window::Events::Init();
@@ -46,50 +47,83 @@ int main(int argc, char const *argv[])
 
     glBindVertexArray(0);
 
-    glClearColor(0.17, 0.17, 0.17, 1);
+    glClearColor(0.2, 0.2, 0.2, 1);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
 
     std::shared_ptr<window::Camera> camera =
-        std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(40.0f));
+        std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(90.0f));
 
     glm::mat4 model(1.0f);
     model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+
+    float lastTime = glfwGetTime();
+    float delta = 0.0f;
+    float camX = 0.0f;
+    float camY = 0.0f;
+
+    bool cursorLocked = false;
 
     try
     {
         while (!window::Window::ShouldClose())
         {
+            float currentTime = glfwGetTime();
+            delta = currentTime - lastTime;
+            lastTime = currentTime;
+
             if (window::Events::JPressed(GLFW_KEY_ESCAPE))
             {
                 window::Window::ShouldClose(true);
             }
-
-            if (window::Events::Pressed(GLFW_KEY_S))
+            if (window::Events::JPressed(GLFW_KEY_TAB))
             {
-                glm::vec3 position = camera->GetPosition();
-                position.z -= 0.002f;
-                camera->SetPosition(position);
+                window::Events::SetCursorLocked(cursorLocked);
+                cursorLocked = !cursorLocked;
             }
+
             if (window::Events::Pressed(GLFW_KEY_W))
             {
                 glm::vec3 position = camera->GetPosition();
-                position.z += 0.002f;
+                position += camera->GetFront() * speed * delta;
+                camera->SetPosition(position);
+            }
+            if (window::Events::Pressed(GLFW_KEY_S))
+            {
+                glm::vec3 position = camera->GetPosition();
+                position -= camera->GetFront() * speed * delta;
                 camera->SetPosition(position);
             }
             if (window::Events::Pressed(GLFW_KEY_A))
             {
                 glm::vec3 position = camera->GetPosition();
-                position.x -= 0.006f;
+                position += camera->GetRight() * speed * delta;
                 camera->SetPosition(position);
             }
             if (window::Events::Pressed(GLFW_KEY_D))
             {
                 glm::vec3 position = camera->GetPosition();
-                position.x += 0.006f;
+                position -= camera->GetRight() * speed * delta;
                 camera->SetPosition(position);
+            }
+
+            if (window::Events::IsCursorLocked())
+            {
+                camY = -window::Events::GetDeltaY() / window::Window::GetHeight() / 10;
+                camX = -window::Events::GetDeltaX() / window::Window::GetHeight() / 10;
+
+                if (camY < -glm::radians(89.0f))
+                {
+                    camY = -glm::radians(89.0f);
+                }
+                if (camY > glm::radians(89.0f))
+                {
+                    camY = glm::radians(89.0f);
+                }
+
+                // camera->SetRotation(glm::mat4(1.0f));
+                camera->Rotate(camY, camX, 0);
             }
 
             glClear(GL_COLOR_BUFFER_BIT);
@@ -104,8 +138,8 @@ int main(int argc, char const *argv[])
 
             glBindVertexArray(0);
 
-            window::Events::PollEvents();
             window::Window::SwapBuffer();
+            window::Events::PollEvents();
         }
     }
     catch (const std::exception &e)

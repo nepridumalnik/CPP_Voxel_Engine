@@ -48,7 +48,7 @@ void Shader::Use()
     glUseProgram(id_);
 }
 
-void Shader::UniformMatrix(const std::string &name, glm::mat4 model)
+void Shader::UniformMatrix(const std::string &name, glm::mat4 matrix)
 {
     int32_t transformLocation = glGetUniformLocation(id_, name.c_str());
 
@@ -57,7 +57,7 @@ void Shader::UniformMatrix(const std::string &name, glm::mat4 model)
         throw std::runtime_error{"Failed to get uniform: " + name};
     }
 
-    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 std::shared_ptr<Shader> LoadShader(const std::string &vFile, const std::string &fFile)

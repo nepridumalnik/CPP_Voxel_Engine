@@ -17,12 +17,17 @@ public:
     static void SwapBuffer();
     static bool ShouldClose();
     static void ShouldClose(bool flag);
+    static int32_t GetWidth();
+    static int32_t GetHeight();
+
+private:
+    static void setCursorMode(int32_t mode);
 
 private:
     static GLFWwindow *window_;
-
-    static uint32_t width_;
-    static uint32_t height_;
+    static int32_t width_;
+    static int32_t height_;
+    static bool cursorLocker_;
 
     friend class Events;
     friend class Camera;

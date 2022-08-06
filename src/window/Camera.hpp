@@ -21,10 +21,10 @@ public:
 
     void SetPosition(glm::vec3 newPosition);
     void SetRotation(glm::mat4 newRotation);
+    void Rotate(float x, float y, float z);
 
 private:
     void updateVectors();
-    void rotate(float x, float y, float z);
 
 private:
     float fov_;

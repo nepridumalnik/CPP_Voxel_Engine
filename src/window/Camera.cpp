@@ -19,19 +19,24 @@ void Camera::updateVectors()
     up_ = glm::vec3(rotation_ * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
-void Camera::rotate(float x, float y, float z)
+void Camera::Rotate(float x, float y, float z)
 {
-    rotation_ = glm::rotate(rotation_, x, glm::vec3(0.0f, 0.0f, 1.0f));
-    rotation_ = glm::rotate(rotation_, y, glm::vec3(0.0f, 1.0f, 0.0f));
-    rotation_ = glm::rotate(rotation_, z, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotation_ = glm::rotate(rotation_, -x, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotation_ = glm::rotate(rotation_, -y, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotation_ = glm::rotate(rotation_, z, glm::vec3(0.0f, 0.0f, 1.0f));
 
     updateVectors();
 }
 
 glm::mat4 Camera::GetProjection()
 {
-    float aspect = Window::height_ ? Window::width_ / Window::height_ : 0;
-    return glm::perspective(fov_, aspect, 0.1f, 100.0f);
+    if (Window::height_)
+    {
+        return glm::perspective(
+            fov_, static_cast<float>(Window::width_) / static_cast<float>(Window::height_), 0.01f,
+            100.0f);
+    }
+    return glm::perspective(fov_, 0.0f, 0.01f, 100.0f);
 }
 
 glm::mat4 Camera::GetView()
@@ -72,6 +77,7 @@ void Camera::SetPosition(glm::vec3 newPosition)
 void Camera::SetRotation(glm::mat4 newRotation)
 {
     rotation_ = newRotation;
+    updateVectors();
 }
 
 } // namespace window
