@@ -16,6 +16,11 @@ set(LIBRARY_SOURCES
     graphics/Shader.cpp
     graphics/Texture.cpp
     graphics/Mesh.cpp
+    graphics/VoxelRenderer.cpp
+
+    # voxels
+    voxels/Chunk.cpp
+    voxels/voxel.cpp
 
     # utils
     utils/loaders.cpp

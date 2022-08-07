@@ -123,8 +123,7 @@ int main(int argc, char const *argv[])
 
             shader->Use();
             shader->UniformMatrix("model", model);
-            shader->UniformMatrix("projection", camera->GetProjection());
-            shader->UniformMatrix("view", camera->GetView());
+            shader->UniformMatrix("projview", camera->GetProjection() * camera->GetView());
             texture->Bind();
 
             mesh->Draw(GL_TRIANGLES);
