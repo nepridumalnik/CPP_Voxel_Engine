@@ -2,6 +2,7 @@
 #include <window/Events.hpp>
 #include <window/Window.hpp>
 
+#include <graphics/Mesh.hpp>
 #include <graphics/Shader.hpp>
 #include <graphics/Texture.hpp>
 
@@ -18,6 +19,10 @@ static constexpr float Vertices[] = {
     -1.0f, 1.0f,  0.0f, 0.0f, 1.0f, // 6
 };
 
+static constexpr int32_t Attributes[] = {
+    3, 2, 0 // null terminator
+};
+
 int main(int argc, char const *argv[])
 {
     constexpr uint32_t width = 1280;
@@ -31,21 +36,8 @@ int main(int argc, char const *argv[])
 
     std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("checker.jpg");
-
-    uint32_t VAO;
-    uint32_t VBO;
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(1);
+    std::shared_ptr<graphics::Mesh> mesh =
+        std::make_shared<graphics::Mesh>(Vertices, 6, Attributes);
 
     glBindVertexArray(0);
 
@@ -135,8 +127,8 @@ int main(int argc, char const *argv[])
             shader->UniformMatrix("view", camera->GetView());
             texture->Bind();
 
-            glBindVertexArray(VAO);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            mesh->Draw(GL_TRIANGLES);
+
             glBindVertexArray(0);
 
             window::Window::SwapBuffer();
@@ -147,9 +139,6 @@ int main(int argc, char const *argv[])
     {
         std::cerr << e.what() << std::endl;
     }
-
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
 
     window::Window::Terminate();
 

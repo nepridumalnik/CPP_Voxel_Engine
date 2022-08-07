@@ -2,8 +2,6 @@
 
 #include <window/Window.hpp>
 
-#include <utils/macros.hpp>
-
 namespace window
 {
 

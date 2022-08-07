@@ -1,4 +1,4 @@
-set(TARGET Application)
+set(TARGET Engine)
 
 set(EXECUTABLE_SOURCES
     # main
@@ -6,7 +6,7 @@ set(EXECUTABLE_SOURCES
 )
 
 set(LIBRARY_SOURCES
-    # subsystems
+    # engine
     # window
     window/Window.cpp
     window/Events.cpp
@@ -15,11 +15,13 @@ set(LIBRARY_SOURCES
     # graphics
     graphics/Shader.cpp
     graphics/Texture.cpp
+    graphics/Mesh.cpp
 
     # utils
     utils/loaders.cpp
 )
 set(PRECOMPILE_HEADERS
+    ${CMAKE_SOURCE_DIR}/src/utils/macros.hpp
     ${CMAKE_SOURCE_DIR}/pch/OpenGL.hpp
     ${CMAKE_SOURCE_DIR}/pch/GLM.hpp
 )

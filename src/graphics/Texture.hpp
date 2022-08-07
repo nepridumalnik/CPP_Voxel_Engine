@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utils/macros.hpp>
-
 #include <memory>
 #include <stdint.h>
 #include <string>
