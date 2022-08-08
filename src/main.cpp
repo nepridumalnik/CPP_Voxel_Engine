@@ -5,6 +5,9 @@
 #include <graphics/Mesh.hpp>
 #include <graphics/Shader.hpp>
 #include <graphics/Texture.hpp>
+#include <graphics/VoxelRenderer.hpp>
+
+#include <voxels/Chunk.hpp>
 
 #include <iostream>
 
@@ -36,8 +39,9 @@ int main(int argc, char const *argv[])
 
     std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("checker.jpg");
-    std::shared_ptr<graphics::Mesh> mesh =
-        std::make_shared<graphics::Mesh>(Vertices, 6, Attributes);
+    std::shared_ptr<graphics::VoxelRenderer> renderer = std::make_shared<graphics::VoxelRenderer>();
+    std::shared_ptr<voxels::Chunk> chunk = std::make_shared<voxels::Chunk>();
+    std::shared_ptr<graphics::Mesh> mesh = renderer->Render(chunk);
 
     glBindVertexArray(0);
 
@@ -123,7 +127,8 @@ int main(int argc, char const *argv[])
 
             shader->Use();
             shader->UniformMatrix("model", model);
-            shader->UniformMatrix("projview", camera->GetProjection() * camera->GetView());
+            shader->UniformMatrix("projection", camera->GetProjection());
+            shader->UniformMatrix("view", camera->GetView());
             texture->Bind();
 
             mesh->Draw(GL_TRIANGLES);
