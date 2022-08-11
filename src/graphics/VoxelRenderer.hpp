@@ -25,9 +25,7 @@ private:
     inline void pushVertex(float x, float y, float z, float u, float v, float l);
     inline Vertex makeVertex(float x, float y, float z, float u, float v, float l);
     inline void pushShape(const Shape &shape);
-
-    // TODO
-    // void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
+    void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
 
 private:
     std::vector<float> buffer_;
