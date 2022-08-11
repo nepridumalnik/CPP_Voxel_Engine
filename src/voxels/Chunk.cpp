@@ -18,7 +18,7 @@ Chunk::Chunk()
                 int id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
                 if (y <= 2)
                     id = 2;
-                voxels[(y * ChunkDepth + z) * ChunkWidth + x].id = id;
+                voxels_[(y * ChunkDepth + z) * ChunkWidth + x].id = id;
             }
         }
     }
@@ -26,7 +26,13 @@ Chunk::Chunk()
 
 voxel &voxels::Chunk::operator[](uint32_t idx)
 {
-    return voxels.at(idx);
+    return voxels_.at(idx);
+}
+
+voxel &Chunk::GetVoxel(int32_t x, int32_t y, int32_t z)
+{
+    const uint32_t idx = (y * voxels::ChunkDepth + z) * voxels::ChunkWidth + x;
+    return voxels_.at(idx);
 }
 
 } // namespace voxels

@@ -19,9 +19,10 @@ public:
     Chunk();
 
     voxel &operator[](uint32_t idx);
+    voxel &GetVoxel(int32_t x, int32_t y, int32_t z);
 
 private:
-    std::array<voxels::voxel, ChunkVolume> voxels;
+    std::array<voxels::voxel, ChunkVolume> voxels_;
 };
 
 } // namespace voxels

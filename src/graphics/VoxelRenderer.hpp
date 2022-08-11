@@ -18,11 +18,16 @@ public:
     std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
 
 private:
+    inline void pushVertex(float x, float y, float z, float u, float v, float l);
+    inline bool hasNeighbour(std::shared_ptr<voxels::Chunk> chunk, uint32_t x, uint32_t y,
+                             uint32_t z);
+
+private:
     std::vector<float> buffer_;
     uint32_t capacity_;
 
     static const uint32_t vertexSize_;
-    static const uint32_t numberOfSides_;
+    static const int32_t chunkAttributes_[];
 };
 
 } // namespace graphics
