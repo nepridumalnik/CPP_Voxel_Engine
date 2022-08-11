@@ -20,11 +20,12 @@ private:
 
 private:
     std::vector<float> buffer_;
-    uint32_t capacity_;
 
     static const uint32_t vertexSize_;
     static const int32_t chunkAttributes_[];
     static const uint32_t atlasSide_;
+
+    static const float uvsize_;
 };
 
 } // namespace graphics

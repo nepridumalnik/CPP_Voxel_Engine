@@ -4,6 +4,7 @@ namespace graphics
 {
 
 const int32_t VoxelRenderer::chunkAttributes_[] = {3, 2, 1, 0};
+const float VoxelRenderer::uvsize_ = 1.0f / VoxelRenderer::atlasSide_;
 const uint32_t VoxelRenderer::vertexSize_ = 3 * 2;
 const uint32_t VoxelRenderer::atlasSide_ = 16;
 
@@ -32,74 +33,82 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                 }
 
                 shape l = 0;
-                static constexpr float uvsize = 1.0f / VoxelRenderer::atlasSide_;
-                const float u = (id % VoxelRenderer::atlasSide_) * uvsize;
-                const float v = 1 - ((1 + id / VoxelRenderer::atlasSide_) * uvsize);
+                const float u = (id % VoxelRenderer::atlasSide_) * VoxelRenderer::uvsize_;
+                const float v = 1 - ((1 + id / VoxelRenderer::atlasSide_) * VoxelRenderer::uvsize_);
 
                 if (!chunk->hasNeighbour(x, y + 1, z))
                 {
                     l = topShape;
-                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
-                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
                     pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v, l);
                 }
                 if (!chunk->hasNeighbour(x, y - 1, z))
                 {
                     l = bottomShape;
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
                 }
                 if (!chunk->hasNeighbour(x + 1, y, z))
                 {
                     l = rightShape;
-                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
-                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
                     pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u, v, l);
                 }
                 if (!chunk->hasNeighbour(x - 1, y, z))
                 {
                     l = leftShape;
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                    pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
+                    pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
                 }
                 if (!chunk->hasNeighbour(x, y, z + 1))
                 {
                     l = frontShape;
                     pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
                     pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
-                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
+                    pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
                 }
                 if (!chunk->hasNeighbour(x, y, z - 1))
                 {
                     l = backShape;
-                    pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v + uvsize, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize, l);
+                    pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_,
+                               v + VoxelRenderer::uvsize_, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + VoxelRenderer::uvsize_, l);
 
-                    pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
-                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize, l);
+                    pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + VoxelRenderer::uvsize_, v, l);
+                    pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + VoxelRenderer::uvsize_, l);
                     pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u, v, l);
                 }
             }
