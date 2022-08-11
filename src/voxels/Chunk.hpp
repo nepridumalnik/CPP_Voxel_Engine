@@ -19,6 +19,7 @@ public:
     Chunk();
 
     voxel &operator[](uint32_t idx);
+    inline bool hasNeighbour(uint32_t x, uint32_t y, uint32_t z);
     voxel &GetVoxel(int32_t x, int32_t y, int32_t z);
 
 private:

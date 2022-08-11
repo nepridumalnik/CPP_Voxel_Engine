@@ -30,6 +30,16 @@ voxel &voxels::Chunk::operator[](uint32_t idx)
     return voxels_.at(idx);
 }
 
+inline bool Chunk::hasNeighbour(uint32_t x, uint32_t y, uint32_t z)
+{
+    if (x >= voxels::ChunkWidth || y >= voxels::ChunkHeight || z >= voxels::ChunkDepth)
+    {
+        return false;
+    }
+
+    return 0 != GetVoxel(x, y, z).id;
+}
+
 voxel &Chunk::GetVoxel(int32_t x, int32_t y, int32_t z)
 {
     const uint32_t idx = (y * voxels::ChunkDepth + z) * voxels::ChunkWidth + x;
