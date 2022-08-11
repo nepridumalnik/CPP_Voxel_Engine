@@ -18,10 +18,10 @@ public:
     static bool IsCursorLocked();
 
 private:
-    static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-    static void mouseCallback(GLFWwindow *window, int button, int action, int mods);
+    static void keyCallback(GLFWwindow *window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+    static void mouseCallback(GLFWwindow *window, int32_t button, int32_t action, int32_t mods);
     static void cursorCallback(GLFWwindow *window, double xPos, double yPos);
-    static void windowCallback(GLFWwindow *window, int width, int height);
+    static void windowCallback(GLFWwindow *window, int32_t width, int32_t height);
 
 private:
     static std::pair<bool, uint32_t> keys_[];

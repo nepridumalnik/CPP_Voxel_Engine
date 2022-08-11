@@ -9,16 +9,17 @@ namespace voxels
 
 Chunk::Chunk()
 {
-    for (int y = 0; y < ChunkHeight; ++y)
+    for (int32_t y = 0; y < ChunkHeight; ++y)
     {
-        for (int z = 0; z < ChunkDepth; ++z)
+        for (int32_t z = 0; z < ChunkDepth; ++z)
         {
-            for (int x = 0; x < ChunkWidth; ++x)
+            for (int32_t x = 0; x < ChunkWidth; ++x)
             {
-                int id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
-                if (y <= 2)
-                    id = 2;
-                voxels_[(y * ChunkDepth + z) * ChunkWidth + x].id = id;
+                int32_t id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
+                if (y <= voxels::BlockType::Last)
+                    id = voxels::BlockType::Last;
+                voxels_[(y * ChunkDepth + z) * ChunkWidth + x].id =
+                    static_cast<voxels::BlockType>(id);
             }
         }
     }

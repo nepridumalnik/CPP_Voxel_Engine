@@ -24,7 +24,7 @@ void Events::cursorCallback(GLFWwindow *window, double xPos, double yPos)
     Events::y_ = yPos;
 }
 
-void Events::windowCallback(GLFWwindow *window, int width, int height)
+void Events::windowCallback(GLFWwindow *window, int32_t width, int32_t height)
 {
     glViewport(0, 0, width, height);
 
@@ -32,7 +32,7 @@ void Events::windowCallback(GLFWwindow *window, int width, int height)
     Window::height_ = height;
 }
 
-void Events::mouseCallback(GLFWwindow *window, int button, int action, int mods)
+void Events::mouseCallback(GLFWwindow *window, int32_t button, int32_t action, int32_t mods)
 {
     switch (action)
     {
@@ -47,7 +47,7 @@ void Events::mouseCallback(GLFWwindow *window, int button, int action, int mods)
     }
 }
 
-void Events::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Events::keyCallback(GLFWwindow *window, int32_t key, int32_t scancode, int32_t action, int32_t mods)
 {
     switch (action)
     {

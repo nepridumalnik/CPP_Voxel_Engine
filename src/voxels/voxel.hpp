@@ -5,9 +5,18 @@
 namespace voxels
 {
 
+enum BlockType : uint32_t
+{
+    None,
+    Grass,
+    Dirt,
+
+    Last = Dirt
+};
+
 struct voxel
 {
-    uint8_t id;
+    BlockType id;
 };
 
 } // namespace voxels

@@ -112,7 +112,7 @@ uint32_t LoadGLTexture(const std::string &file, int32_t &width, int32_t &height)
         fclose(f);
         finishAndThrow(file);
     }
-    for (unsigned int i = 0; i < height; ++i)
+    for (int32_t i = 0; i < height; ++i)
     {
         row_pointers[height - 1 - i] = imageData + i * row_bytes;
     }

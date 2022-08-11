@@ -14,7 +14,7 @@
 
 #include <utils/loaders.hpp>
 
-int main(int argc, char const *argv[])
+int32_t main(int32_t argc, char const *argv[])
 try
 {
     constexpr uint32_t width = 1280;

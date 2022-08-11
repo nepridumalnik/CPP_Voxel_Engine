@@ -14,16 +14,16 @@ VoxelRenderer::VoxelRenderer(uint32_t capacity) : capacity_(capacity)
 std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk)
 {
     size_t index = 0;
-    for (int y = 0; y < voxels::ChunkHeight; ++y)
+    for (int32_t y = 0; y < voxels::ChunkHeight; ++y)
     {
-        for (int z = 0; z < voxels::ChunkDepth; ++z)
+        for (int32_t z = 0; z < voxels::ChunkDepth; ++z)
         {
-            for (int x = 0; x < voxels::ChunkWidth; ++x)
+            for (int32_t x = 0; x < voxels::ChunkWidth; ++x)
             {
                 const voxels::voxel &vox = chunk->GetVoxel(x, y, z);
                 const uint32_t id = vox.id;
 
-                if (!id)
+                if (voxels::BlockType::None == id)
                 {
                     continue;
                 }
@@ -78,7 +78,6 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                     pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v, l);
                     pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                 }
-
                 if (!hasNeighbour(chunk, x, y, z + 1))
                 {
                     l = 0.9f;

@@ -7,7 +7,7 @@ Mesh::Mesh(const float *buffer, uint32_t vertices, const int32_t *attributes) : 
 {
     int32_t vertexSize = 0;
 
-    for (int i = 0; attributes[i]; ++i)
+    for (int32_t i = 0; attributes[i]; ++i)
     {
         vertexSize += attributes[i];
     }
@@ -19,8 +19,8 @@ Mesh::Mesh(const float *buffer, uint32_t vertices, const int32_t *attributes) : 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexSize * vertices_, buffer, GL_STATIC_DRAW);
 
-    int offset = 0;
-    for (int i = 0; attributes[i]; ++i)
+    int32_t offset = 0;
+    for (int32_t i = 0; attributes[i]; ++i)
     {
         glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, vertexSize * sizeof(float),
                               reinterpret_cast<void *>(offset * sizeof(float)));
