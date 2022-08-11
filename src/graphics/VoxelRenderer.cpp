@@ -13,7 +13,14 @@ VoxelRenderer::VoxelRenderer(uint32_t capacity) : capacity_(capacity)
 
 std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk)
 {
-    size_t index = 0;
+    using shape = float;
+    static constexpr float topShape = 1.0f;
+    static constexpr float bottomShape = 0.75f;
+    static constexpr float rightShape = 0.95f;
+    static constexpr float leftShape = 0.85f;
+    static constexpr float frontShape = 0.9f;
+    static constexpr float backShape = 0.8f;
+
     for (int32_t y = 0; y < voxels::ChunkHeight; ++y)
     {
         for (int32_t z = 0; z < voxels::ChunkDepth; ++z)
@@ -28,14 +35,14 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                     continue;
                 }
 
-                float l = 0;
+                shape l = 0;
                 const float uvsize = 1.0f / 16.0f;
                 const float u = (id % 16) * uvsize;
                 const float v = 1 - ((1 + id / 16) * uvsize);
 
                 if (!hasNeighbour(chunk, x, y + 1, z))
                 {
-                    l = 1.0f;
+                    l = topShape;
                     pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v, l);
                     pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
@@ -46,7 +53,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                 }
                 if (!hasNeighbour(chunk, x, y - 1, z))
                 {
-                    l = 0.75f;
+                    l = bottomShape;
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
                     pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + uvsize, l);
@@ -55,10 +62,9 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                     pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
                     pushVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                 }
-
                 if (!hasNeighbour(chunk, x + 1, y, z))
                 {
-                    l = 0.95f;
+                    l = rightShape;
                     pushVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
                     pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
@@ -69,7 +75,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                 }
                 if (!hasNeighbour(chunk, x - 1, y, z))
                 {
-                    l = 0.85f;
+                    l = leftShape;
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
                     pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize, l);
@@ -80,7 +86,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                 }
                 if (!hasNeighbour(chunk, x, y, z + 1))
                 {
-                    l = 0.9f;
+                    l = frontShape;
                     pushVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
                     pushVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize, l);
@@ -91,7 +97,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                 }
                 if (!hasNeighbour(chunk, x, y, z - 1))
                 {
-                    l = 0.8f;
+                    l = backShape;
                     pushVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize, v, l);
                     pushVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize, v + uvsize, l);
                     pushVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize, l);
