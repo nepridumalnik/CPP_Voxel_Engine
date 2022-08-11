@@ -33,6 +33,7 @@ set(PRECOMPILE_HEADERS
 set(LIBRARIES
     glfw
     GLEW::GLEW
+    PNG::PNG
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

@@ -20,7 +20,7 @@ void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     Window::width_ = w;
     Window::height_ = h;
@@ -44,6 +44,11 @@ void Window::Init(uint32_t w, uint32_t h, const std::string &windowName)
     }
 
     glViewport(0, 0, Window::width_, Window::height_);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::Terminate()
@@ -74,6 +79,21 @@ int32_t Window::GetWidth()
 int32_t Window::GetHeight()
 {
     return Window::height_;
+}
+
+void Window::SetWidth(int32_t width)
+{
+    Window::width_ = width;
+}
+
+void Window::SetHeight(int32_t height)
+{
+    Window::height_ = height;
+}
+
+void Window::SetClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
 }
 
 void Window::setCursorMode(int32_t mode)

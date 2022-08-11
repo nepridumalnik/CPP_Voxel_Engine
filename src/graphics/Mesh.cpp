@@ -5,9 +5,9 @@ namespace graphics
 
 Mesh::Mesh(const float *buffer, uint32_t vertices, const int32_t *attributes) : vertices_(vertices)
 {
-    uint32_t vertexSize = 0;
+    int32_t vertexSize = 0;
 
-    for (uint32_t i = 0; i < attributes[i]; ++i)
+    for (int i = 0; attributes[i]; ++i)
     {
         vertexSize += attributes[i];
     }
@@ -17,16 +17,15 @@ Mesh::Mesh(const float *buffer, uint32_t vertices, const int32_t *attributes) : 
 
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, vertexSize * sizeof(float) * vertices_, buffer, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexSize * vertices_, buffer, GL_STATIC_DRAW);
 
-    uint32_t offset = 0;
-
-    for (uint32_t i = 0; attributes[i]; ++i)
+    int offset = 0;
+    for (int i = 0; attributes[i]; ++i)
     {
-        uint32_t size = attributes[i];
-        glVertexAttribPointer(i, size, GL_FLOAT, GL_FALSE, vertexSize * sizeof(float), nullptr);
+        glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE, vertexSize * sizeof(float),
+                              reinterpret_cast<void *>(offset * sizeof(float)));
         glEnableVertexAttribArray(i);
-        offset += size;
+        offset += attributes[i];
     }
 
     glBindVertexArray(0);
@@ -42,6 +41,7 @@ void Mesh::Draw(uint32_t primitive)
 {
     glBindVertexArray(vao_);
     glDrawArrays(primitive, 0, vertices_);
+    glBindVertexArray(0);
 }
 
 } // namespace graphics

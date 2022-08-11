@@ -1,7 +1,7 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
-#include <stdint.h>
 #include <string>
 
 namespace graphics
@@ -20,7 +20,7 @@ private:
     uint32_t id_;
 };
 
-EXPORT std::shared_ptr<Shader> LoadShader(const std::string &vertexFile,
+std::shared_ptr<Shader> EXPORT LoadShader(const std::string &vertexFile,
                                           const std::string &fragmentFile);
 
 } // namespace graphics

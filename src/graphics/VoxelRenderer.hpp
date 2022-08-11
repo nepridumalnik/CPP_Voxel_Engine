@@ -13,12 +13,13 @@ namespace graphics
 class EXPORT VoxelRenderer
 {
 public:
-    VoxelRenderer();
+    VoxelRenderer(uint32_t capacity);
 
     std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
 
 private:
     std::vector<float> buffer_;
+    uint32_t capacity_;
 
     static const uint32_t vertexSize_;
     static const uint32_t numberOfSides_;

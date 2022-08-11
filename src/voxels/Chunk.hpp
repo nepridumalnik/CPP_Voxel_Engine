@@ -3,6 +3,7 @@
 #include <voxels/voxel.hpp>
 
 #include <array>
+#include <cstdint>
 
 namespace voxels
 {
@@ -17,10 +18,10 @@ class EXPORT Chunk
 public:
     Chunk();
 
-    std::array<std::array<voxels::voxel, ChunkWidth>, ChunkHeight> &operator[](uint32_t idx);
+    voxel &operator[](uint32_t idx);
 
 private:
-    std::array<std::array<std::array<voxel, ChunkWidth>, ChunkHeight>, ChunkDepth> voxels_;
+    std::array<voxels::voxel, ChunkVolume> voxels;
 };
 
 } // namespace voxels

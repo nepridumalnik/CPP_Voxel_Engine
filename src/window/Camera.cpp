@@ -2,8 +2,6 @@
 
 #include <window/Window.hpp>
 
-#include <glm/ext.hpp>
-
 namespace window
 {
 
@@ -70,14 +68,14 @@ glm::mat4 Camera::GetRotation()
     return rotation_;
 }
 
-void Camera::SetPosition(glm::vec3 newPosition)
+void Camera::SetPosition(glm::vec3 position)
 {
-    position_ = newPosition;
+    position_ = position;
 }
 
-void Camera::SetRotation(glm::mat4 newRotation)
+void Camera::SetRotation(glm::mat4 rotation)
 {
-    rotation_ = newRotation;
+    rotation_ = rotation;
     updateVectors();
 }
 

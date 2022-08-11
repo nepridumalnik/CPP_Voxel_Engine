@@ -17,6 +17,9 @@ public:
     static void ShouldClose(bool flag);
     static int32_t GetWidth();
     static int32_t GetHeight();
+    static void SetWidth(int32_t width);
+    static void SetHeight(int32_t height);
+    static void SetClearColor(float r, float g, float b, float a);
 
 private:
     static void setCursorMode(int32_t mode);

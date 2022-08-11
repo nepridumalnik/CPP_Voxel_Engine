@@ -1,7 +1,7 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
-#include <stdint.h>
 #include <string>
 
 namespace graphics
@@ -21,6 +21,6 @@ private:
     uint32_t height_;
 };
 
-EXPORT std::shared_ptr<Texture> LoadTexture(const std::string &tFile);
+std::shared_ptr<Texture> EXPORT LoadTexture(const std::string &tFile);
 
 } // namespace graphics

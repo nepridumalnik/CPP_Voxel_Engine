@@ -17,8 +17,8 @@ public:
     glm::vec3 GetRight();
     glm::mat4 GetRotation();
 
-    void SetPosition(glm::vec3 newPosition);
-    void SetRotation(glm::mat4 newRotation);
+    void SetPosition(glm::vec3 position);
+    void SetRotation(glm::mat4 rotation);
     void Rotate(float x, float y, float z);
 
 private:

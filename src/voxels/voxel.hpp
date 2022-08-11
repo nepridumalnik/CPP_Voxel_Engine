@@ -1,18 +1,13 @@
 #pragma once
 
+#include <cstdint>
+
 namespace voxels
 {
 
-enum VoxelType
+struct voxel
 {
-    None,
-    Grass,
-    Dirt
-};
-
-struct EXPORT voxel
-{
-    VoxelType id;
+    uint8_t id;
 };
 
 } // namespace voxels

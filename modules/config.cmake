@@ -1,6 +1,6 @@
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glew CONFIG REQUIRED)
-find_path(STB_INCLUDE_DIRS stb_c_lexer.h)
+find_package(PNG REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
