@@ -15,8 +15,8 @@ class EXPORT VoxelRenderer
 {
 private:
     using Vertex = std::array<float, 6>;
-    using Shape = std::array<Vertex, 6>;
-    using ShapeDirection = float;
+    using Face = std::array<Vertex, 6>;
+    using FaceDirection = float;
 
 public:
     std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
@@ -24,7 +24,7 @@ public:
 private:
     inline void pushVertex(float x, float y, float z, float u, float v, float l);
     inline Vertex makeVertex(float x, float y, float z, float u, float v, float l);
-    inline void pushShape(const Shape &shape);
+    inline void pushFace(const Face &face);
     void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
 
 private:

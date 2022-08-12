@@ -35,31 +35,31 @@ inline VoxelRenderer::Vertex VoxelRenderer::makeVertex(float x, float y, float z
     return {x, y, z, u, v, l};
 }
 
-void VoxelRenderer::pushShape(const VoxelRenderer::Shape &shape)
+void VoxelRenderer::pushFace(const VoxelRenderer::Face &face)
 {
     static std::mutex mtx;
     std::unique_lock lock(mtx);
 
-    buffer_.reserve(buffer_.size() + (shape.size() * shape[0].size()));
-    for (uint32_t i = 0; i < shape.size(); ++i)
+    buffer_.reserve(buffer_.size() + (face.size() * face[0].size()));
+    for (uint32_t i = 0; i < face.size(); ++i)
     {
-        for (uint32_t j = 0; j < shape.size(); ++j)
+        for (uint32_t j = 0; j < face.size(); ++j)
         {
-            buffer_.push_back(shape[i][j]);
+            buffer_.push_back(face[i][j]);
         }
     }
 }
 
 void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y)
 {
-    static constexpr ShapeDirection topShape = 1.0f;
-    static constexpr ShapeDirection bottomShape = 0.75f;
-    static constexpr ShapeDirection rightShape = 0.95f;
-    static constexpr ShapeDirection leftShape = 0.85f;
-    static constexpr ShapeDirection frontShape = 0.9f;
-    static constexpr ShapeDirection backShape = 0.8f;
+    static constexpr FaceDirection topFace = 1.0f;
+    static constexpr FaceDirection bottomFace = 0.75f;
+    static constexpr FaceDirection rightFace = 0.95f;
+    static constexpr FaceDirection leftFace = 0.85f;
+    static constexpr FaceDirection frontFace = 0.9f;
+    static constexpr FaceDirection backFace = 0.8f;
 
-    ShapeDirection l = 0;
+    FaceDirection l = 0;
 
     for (int32_t z = 0; z < voxels::ChunkDepth; ++z)
     {
@@ -78,87 +78,87 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
 
             if (!chunk->hasNeighbour(x, y + 1, z))
             {
-                l = topShape;
-                Shape shape;
-                shape[0] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
+                l = topFace;
+                Face face;
+                face[0] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
-                shape[5] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v, l);
+                face[3] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
+                face[5] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
             if (!chunk->hasNeighbour(x, y - 1, z))
             {
-                l = bottomShape;
-                Shape shape;
-                shape[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                shape[1] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + uvsize_, l);
+                l = bottomFace;
+                Face face;
+                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
+                face[1] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                shape[4] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
+                face[4] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
             if (!chunk->hasNeighbour(x + 1, y, z))
             {
-                l = rightShape;
-                Shape shape;
-                shape[0] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[1] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
+                l = rightFace;
+                Face face;
+                face[0] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[1] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
-                shape[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u, v, l);
+                face[3] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
+                face[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u, v, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
             if (!chunk->hasNeighbour(x - 1, y, z))
             {
-                l = leftShape;
-                Shape shape;
-                shape[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                shape[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
+                l = leftFace;
+                Face face;
+                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
+                face[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
-                shape[4] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, l);
-                shape[5] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, l);
+                face[4] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, l);
+                face[5] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
             if (!chunk->hasNeighbour(x, y, z + 1))
             {
-                l = frontShape;
-                Shape shape;
-                shape[0] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
-                shape[1] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
+                l = frontFace;
+                Face face;
+                face[0] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
+                face[1] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
-                shape[4] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, l);
-                shape[5] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
+                face[3] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, l);
+                face[4] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, l);
+                face[5] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
             if (!chunk->hasNeighbour(x, y, z - 1))
             {
-                l = backShape;
-                Shape shape;
-                shape[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[1] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, l);
-                shape[2] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
+                l = backFace;
+                Face face;
+                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[1] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, l);
+                face[2] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
 
-                shape[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
-                shape[4] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
-                shape[5] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u, v, l);
+                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, l);
+                face[4] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, l);
+                face[5] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u, v, l);
 
-                pushShape(shape);
+                pushFace(face);
             }
         }
     }
