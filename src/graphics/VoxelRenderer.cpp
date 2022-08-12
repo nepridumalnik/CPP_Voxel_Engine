@@ -8,6 +8,7 @@ namespace graphics
 
 const int32_t VoxelRenderer::chunkAttributes_[] = {3, 2, 1, 0};
 const uint32_t VoxelRenderer::atlasElement_ = 16;
+const float VoxelRenderer::cubeSideSize_ = 0.5f;
 const float VoxelRenderer::uvsize_ = 1.0f / VoxelRenderer::atlasElement_;
 const uint32_t VoxelRenderer::vertexSize_ = 3 * 2;
 
@@ -81,13 +82,18 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = topFace;
                 Face face;
-                face[0] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, light);
+                face[0] =
+                    makeVertex(leftVertex(x), upVertex(y), forwardVertex(z), u + uvsize_, v, light);
+                face[1] = makeVertex(leftVertex(x), upVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u, v + uvsize_,
+                                     light);
 
-                face[3] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, light);
-                face[5] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v, light);
+                face[3] =
+                    makeVertex(leftVertex(x), upVertex(y), forwardVertex(z), u + uvsize_, v, light);
+                face[4] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u, v + uvsize_,
+                                     light);
+                face[5] = makeVertex(rightVertex(x), upVertex(y), forwardVertex(z), u, v, light);
 
                 pushFace(face);
             }
@@ -95,13 +101,17 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = bottomFace;
                 Face face;
-                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, light);
-                face[1] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v + uvsize_, light);
+                face[0] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u, v, light);
+                face[1] = makeVertex(rightVertex(x), downVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] = makeVertex(leftVertex(x), downVertex(y), backwardVertex(z), u,
+                                     v + uvsize_, light);
 
-                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, light);
-                face[4] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
+                face[3] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u, v, light);
+                face[4] = makeVertex(rightVertex(x), downVertex(y), forwardVertex(z), u + uvsize_,
+                                     v, light);
+                face[5] = makeVertex(rightVertex(x), downVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
 
                 pushFace(face);
             }
@@ -109,13 +119,18 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = rightFace;
                 Face face;
-                face[0] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[1] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, light);
+                face[0] = makeVertex(rightVertex(x), downVertex(y), forwardVertex(z), u + uvsize_,
+                                     v, light);
+                face[1] = makeVertex(rightVertex(x), upVertex(y), forwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u, v + uvsize_,
+                                     light);
 
-                face[3] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[4] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, light);
-                face[5] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u, v, light);
+                face[3] = makeVertex(rightVertex(x), downVertex(y), forwardVertex(z), u + uvsize_,
+                                     v, light);
+                face[4] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u, v + uvsize_,
+                                     light);
+                face[5] = makeVertex(rightVertex(x), downVertex(y), backwardVertex(z), u, v, light);
 
                 pushFace(face);
             }
@@ -123,13 +138,17 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = leftFace;
                 Face face;
-                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, light);
-                face[1] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, light);
+                face[0] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u, v, light);
+                face[1] = makeVertex(leftVertex(x), upVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] =
+                    makeVertex(leftVertex(x), upVertex(y), forwardVertex(z), u, v + uvsize_, light);
 
-                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u, v, light);
-                face[4] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, light);
-                face[5] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
+                face[3] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u, v, light);
+                face[4] = makeVertex(leftVertex(x), downVertex(y), backwardVertex(z), u + uvsize_,
+                                     v, light);
+                face[5] = makeVertex(leftVertex(x), upVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
 
                 pushFace(face);
             }
@@ -137,13 +156,17 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = frontFace;
                 Face face;
-                face[0] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, light);
-                face[1] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x - 0.5f, y + 0.5f, z + 0.5f, u, v + uvsize_, light);
+                face[0] = makeVertex(leftVertex(x), downVertex(y), backwardVertex(z), u, v, light);
+                face[1] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] = makeVertex(leftVertex(x), upVertex(y), backwardVertex(z), u, v + uvsize_,
+                                     light);
 
-                face[3] = makeVertex(x - 0.5f, y - 0.5f, z + 0.5f, u, v, light);
-                face[4] = makeVertex(x + 0.5f, y - 0.5f, z + 0.5f, u + uvsize_, v, light);
-                face[5] = makeVertex(x + 0.5f, y + 0.5f, z + 0.5f, u + uvsize_, v + uvsize_, light);
+                face[3] = makeVertex(leftVertex(x), downVertex(y), backwardVertex(z), u, v, light);
+                face[4] = makeVertex(rightVertex(x), downVertex(y), backwardVertex(z), u + uvsize_,
+                                     v, light);
+                face[5] = makeVertex(rightVertex(x), upVertex(y), backwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
 
                 pushFace(face);
             }
@@ -151,18 +174,53 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
             {
                 light = backFace;
                 Face face;
-                face[0] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[1] = makeVertex(x - 0.5f, y + 0.5f, z - 0.5f, u + uvsize_, v + uvsize_, light);
-                face[2] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, light);
+                face[0] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u + uvsize_, v,
+                                     light);
+                face[1] = makeVertex(leftVertex(x), upVertex(y), forwardVertex(z), u + uvsize_,
+                                     v + uvsize_, light);
+                face[2] = makeVertex(rightVertex(x), upVertex(y), forwardVertex(z), u, v + uvsize_,
+                                     light);
 
-                face[3] = makeVertex(x - 0.5f, y - 0.5f, z - 0.5f, u + uvsize_, v, light);
-                face[4] = makeVertex(x + 0.5f, y + 0.5f, z - 0.5f, u, v + uvsize_, light);
-                face[5] = makeVertex(x + 0.5f, y - 0.5f, z - 0.5f, u, v, light);
+                face[3] = makeVertex(leftVertex(x), downVertex(y), forwardVertex(z), u + uvsize_, v,
+                                     light);
+                face[4] = makeVertex(rightVertex(x), upVertex(y), forwardVertex(z), u, v + uvsize_,
+                                     light);
+                face[5] = makeVertex(rightVertex(x), downVertex(y), forwardVertex(z), u, v, light);
 
                 pushFace(face);
             }
         }
     }
+}
+
+inline float VoxelRenderer::leftVertex(uint32_t x)
+{
+    return x - cubeSideSize_;
+}
+
+inline float VoxelRenderer::rightVertex(uint32_t x)
+{
+    return x + cubeSideSize_;
+}
+
+inline float VoxelRenderer::upVertex(uint32_t y)
+{
+    return y + cubeSideSize_;
+}
+
+inline float VoxelRenderer::downVertex(uint32_t y)
+{
+    return y - cubeSideSize_;
+}
+
+inline float VoxelRenderer::forwardVertex(uint32_t z)
+{
+    return z - cubeSideSize_;
+}
+
+inline float VoxelRenderer::backwardVertex(uint32_t z)
+{
+    return z + cubeSideSize_;
 }
 
 } // namespace graphics

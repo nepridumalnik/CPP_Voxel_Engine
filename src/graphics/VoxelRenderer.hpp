@@ -27,6 +27,15 @@ private:
     inline void pushFace(const Face &face);
     void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
 
+    inline float leftVertex(uint32_t x);
+    inline float rightVertex(uint32_t x);
+
+    inline float upVertex(uint32_t y);
+    inline float downVertex(uint32_t y);
+
+    inline float forwardVertex(uint32_t z);
+    inline float backwardVertex(uint32_t z);
+
 private:
     std::vector<float> buffer_;
 
@@ -34,6 +43,7 @@ private:
     static const int32_t chunkAttributes_[];
     static const uint32_t atlasElement_;
 
+    static const float cubeSideSize_;
     static const float uvsize_;
 };
 
