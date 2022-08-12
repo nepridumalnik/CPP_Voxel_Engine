@@ -30,8 +30,8 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
                                             VoxelRenderer::chunkAttributes_);
 }
 
-inline VoxelRenderer::Vertex VoxelRenderer::makeVtx(float x, float y, float z, float u, float v,
-                                                    float l)
+inline VoxelRenderer::Vertex VoxelRenderer::mkVtx(float x, float y, float z, float u, float v,
+                                                  float l)
 {
     return {x, y, z, u, v, l};
 }
@@ -83,13 +83,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = topFace;
                 Face fc;
 
-                fc[0] = makeVtx(leftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = makeVtx(leftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(leftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
-                fc[5] = makeVtx(rightVtx(x), upVtx(y), fwdVtx(z), u, v, light);
+                fc[3] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[5] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v, light);
 
                 pushFace(fc);
             }
@@ -98,15 +98,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = bottomFace;
                 Face fc;
 
-                fc[0] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[1] =
-                    makeVtx(rightVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(leftVtx(x), downVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[1] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[4] = makeVtx(rightVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[5] =
-                    makeVtx(rightVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[4] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
 
                 pushFace(fc);
             }
@@ -115,13 +113,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = rightFace;
                 Face fc;
 
-                fc[0] = makeVtx(rightVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = makeVtx(rightVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[1] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(rightVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
-                fc[5] = makeVtx(rightVtx(x), downVtx(y), bwdVtx(z), u, v, light);
+                fc[3] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u, v, light);
 
                 pushFace(fc);
             }
@@ -130,13 +128,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = leftFace;
                 Face fc;
 
-                fc[0] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[1] = makeVtx(leftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(leftVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[4] = makeVtx(leftVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
-                fc[5] = makeVtx(leftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[4] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
+                fc[5] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
 
                 pushFace(fc);
             }
@@ -145,13 +143,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = frontFace;
                 Face fc;
 
-                fc[0] = makeVtx(leftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
-                fc[1] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(leftVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
+                fc[1] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(leftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
-                fc[4] = makeVtx(rightVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
-                fc[5] = makeVtx(rightVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
+                fc[4] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
+                fc[5] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
 
                 pushFace(fc);
             }
@@ -160,13 +158,13 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
                 light = backFace;
                 Face fc;
 
-                fc[0] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = makeVtx(leftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = makeVtx(rightVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
 
-                fc[3] = makeVtx(leftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = makeVtx(rightVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
-                fc[5] = makeVtx(rightVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u, v, light);
 
                 pushFace(fc);
             }
@@ -174,12 +172,12 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
     }
 }
 
-inline float VoxelRenderer::leftVtx(uint32_t x)
+inline float VoxelRenderer::lftVtx(uint32_t x)
 {
     return x - cubeSideSize_;
 }
 
-inline float VoxelRenderer::rightVtx(uint32_t x)
+inline float VoxelRenderer::rgtVtx(uint32_t x)
 {
     return x + cubeSideSize_;
 }

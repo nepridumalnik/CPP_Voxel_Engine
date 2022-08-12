@@ -22,18 +22,31 @@ public:
     std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
 
 private:
-    inline void pushVtx(float x, float y, float z, float u, float v, float l);
-    inline Vertex makeVtx(float x, float y, float z, float u, float v, float l);
-    inline void pushFace(const Face &face);
+    // Async layer generator
     void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
 
-    inline float leftVtx(uint32_t x);
-    inline float rightVtx(uint32_t x);
+    // Syncronous push face into the buffer
+    inline void pushFace(const Face &face);
 
+    // Make vertex from given values
+    inline Vertex mkVtx(float x, float y, float z, float u, float v, float l);
+
+    // Move point to the left
+    inline float lftVtx(uint32_t x);
+
+    // Move point to the right
+    inline float rgtVtx(uint32_t x);
+
+    // Move point to the up
     inline float upVtx(uint32_t y);
+
+    // Move point to the down
     inline float downVtx(uint32_t y);
 
+    // Move point to the forward
     inline float fwdVtx(uint32_t z);
+
+    // Move point to the backward
     inline float bwdVtx(uint32_t z);
 
 private:
