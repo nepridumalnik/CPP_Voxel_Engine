@@ -16,7 +16,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
 {
     std::vector<std::future<void>> futures{voxels::ChunkHeight};
 
-    for (int32_t y = 0; y < voxels::ChunkHeight; ++y)
+    for (uint32_t y = 0; y < voxels::ChunkHeight; ++y)
     {
         futures[y] = std::async(std::launch::async, &VoxelRenderer::generateLayer, this, chunk, y);
     }
@@ -51,7 +51,7 @@ void VoxelRenderer::pushFace(const VoxelRenderer::Face &face)
     }
 }
 
-void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y)
+void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t y)
 {
     // Light levels
     static constexpr LightLevel topFace = 1.0f;
@@ -63,9 +63,9 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t 
 
     LightLevel light = 0;
 
-    for (int32_t z = 0; z < voxels::ChunkDepth; ++z)
+    for (uint32_t z = 0; z < voxels::ChunkDepth; ++z)
     {
-        for (int32_t x = 0; x < voxels::ChunkWidth; ++x)
+        for (uint32_t x = 0; x < voxels::ChunkWidth; ++x)
         {
             const voxels::voxel &vox = chunk->GetVoxel(x, y, z);
             const uint32_t id = vox.id;

@@ -23,7 +23,7 @@ public:
 
 private:
     // Async layer generator
-    void generateLayer(std::shared_ptr<voxels::Chunk> chunk, int32_t y);
+    void generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t y);
 
     // Syncronous push face into the buffer
     inline void pushFace(const Face &face);
