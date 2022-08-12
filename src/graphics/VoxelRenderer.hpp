@@ -16,7 +16,7 @@ class EXPORT VoxelRenderer
 private:
     using Vertex = std::array<float, 6>;
     using Face = std::array<Vertex, 6>;
-    using FaceDirection = float;
+    using LightLevel = float;
 
 public:
     std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
@@ -32,7 +32,7 @@ private:
 
     static const uint32_t vertexSize_;
     static const int32_t chunkAttributes_[];
-    static const uint32_t atlasSide_;
+    static const uint32_t atlasElement_;
 
     static const float uvsize_;
 };
