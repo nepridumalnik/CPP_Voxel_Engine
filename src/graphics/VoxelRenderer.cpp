@@ -36,17 +36,17 @@ inline VoxelRenderer::Vertex VoxelRenderer::mkVtx(float x, float y, float z, flo
     return {x, y, z, u, v, l};
 }
 
-void VoxelRenderer::pushFace(const VoxelRenderer::Face &fc)
+void VoxelRenderer::pushFace(const VoxelRenderer::Face &face)
 {
     static std::mutex mtx;
     std::unique_lock lock(mtx);
 
-    buffer_.reserve(buffer_.size() + (fc.size() * fc[0].size()));
-    for (uint32_t i = 0; i < fc.size(); ++i)
+    buffer_.reserve(buffer_.size() + (face.size() * face[0].size()));
+    for (uint32_t i = 0; i < face.size(); ++i)
     {
-        for (uint32_t j = 0; j < fc.size(); ++j)
+        for (uint32_t j = 0; j < face.size(); ++j)
         {
-            buffer_.push_back(fc[i][j]);
+            buffer_.push_back(face[i][j]);
         }
     }
 }
