@@ -19,8 +19,9 @@ set(LIBRARY_SOURCES
     graphics/VoxelRenderer.cpp
 
     # voxels
-    voxels/Chunk.cpp
     voxels/voxel.cpp
+    voxels/Chunk.cpp
+    voxels/Chunks.cpp
 
     # utils
     utils/loaders.cpp

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <graphics/Mesh.hpp>
 #include <graphics/Shader.hpp>
 #include <graphics/Texture.hpp>
@@ -10,9 +8,13 @@
 #include <window/Window.hpp>
 
 #include <voxels/Chunk.hpp>
+#include <voxels/Chunks.hpp>
 #include <voxels/voxel.hpp>
 
 #include <utils/loaders.hpp>
+
+#include <iostream>
+#include <vector>
 
 int32_t main(int32_t argc, char const *argv[])
 try
@@ -31,14 +33,20 @@ try
     std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("block.png");
     std::shared_ptr<graphics::VoxelRenderer> renderer = std::make_shared<graphics::VoxelRenderer>();
-    std::shared_ptr<voxels::Chunk> chunk = std::make_shared<voxels::Chunk>();
-    std::shared_ptr<graphics::Mesh> mesh = renderer->Render(chunk);
+
+    std::shared_ptr<voxels::Chunks> chunks = std::make_shared<voxels::Chunks>(4, 4, 1);
+    std::vector<std::shared_ptr<graphics::Mesh>> meshes;
+    meshes.reserve(chunks->Size());
+
+    for (uint32_t i = 0; i < chunks->Size(); ++i)
+    {
+        meshes.push_back(renderer->Render(chunks->At(i)));
+    }
 
     std::shared_ptr<window::Camera> camera =
         std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 20.0f), glm::radians(75.0f));
 
     glm::mat4 model(1.0f);
-    model = glm::translate(model, glm::vec3(0.5f, 0, 0));
 
     float lastTime = glfwGetTime();
     float delta = 0.0f;
@@ -110,10 +118,21 @@ try
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->Use();
-        shader->UniformMatrix("model", model);
         shader->UniformMatrix("projview", camera->GetProjection() * camera->GetView());
         texture->Bind();
-        mesh->Draw(GL_TRIANGLES);
+
+        for (uint32_t i = 0; i < chunks->Size(); ++i)
+        {
+            glm::mat4 model(1.0f);
+            std::shared_ptr<voxels::Chunk> chunk = chunks->At(i);
+            std::shared_ptr<graphics::Mesh> mesh = meshes.at(i);
+
+            model = glm::translate(model, glm::vec3(chunk->GetX() * voxels::ChunkWidth,
+                                                    chunk->GetZ() * voxels::ChunkDepth,
+                                                    chunk->GetY() * voxels::ChunkHeight));
+            shader->UniformMatrix("model", model);
+            mesh->Draw(GL_TRIANGLES);
+        }
 
         window::Window::SwapBuffer();
         window::Events::PollEvents();

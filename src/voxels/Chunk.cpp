@@ -7,7 +7,7 @@
 namespace voxels
 {
 
-Chunk::Chunk()
+Chunk::Chunk(uint32_t xPos, uint32_t yPos, uint32_t zPos) : x_(xPos), y_(yPos), z_(zPos)
 {
     for (int32_t y = 0; y < ChunkHeight; ++y)
     {
@@ -15,9 +15,17 @@ Chunk::Chunk()
         {
             for (int32_t x = 0; x < ChunkWidth; ++x)
             {
-                int32_t id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
+                // int32_t worldX = x_ + ChunkWidth;
+                // int32_t worldY = y_ + ChunkHeight;
+                // int32_t worldZ = z_ + ChunkDepth;
+
+                uint32_t id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
+
                 if (y <= voxels::BlockType::Last)
+                {
                     id = voxels::BlockType::Last;
+                }
+
                 voxels_[(y * ChunkDepth + z) * ChunkWidth + x].id =
                     static_cast<voxels::BlockType>(id);
             }
@@ -44,6 +52,21 @@ voxel &Chunk::GetVoxel(int32_t x, int32_t y, int32_t z)
 {
     const uint32_t idx = (y * voxels::ChunkDepth + z) * voxels::ChunkWidth + x;
     return voxels_.at(idx);
+}
+
+int32_t Chunk::GetX()
+{
+    return x_;
+}
+
+int32_t Chunk::GetY()
+{
+    return y_;
+}
+
+int32_t Chunk::GetZ()
+{
+    return z_;
 }
 
 } // namespace voxels
