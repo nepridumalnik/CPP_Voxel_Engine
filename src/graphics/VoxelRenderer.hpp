@@ -3,6 +3,7 @@
 #include <graphics/Mesh.hpp>
 
 #include <voxels/Chunk.hpp>
+#include <voxels/Chunks.hpp>
 
 #include <array>
 #include <memory>
@@ -19,7 +20,8 @@ private:
     using LightLevel = float;
 
 public:
-    std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk);
+    std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk,
+                                 std::shared_ptr<voxels::Chunks> chunks);
 
 private:
     // Async layer generator
@@ -49,8 +51,11 @@ private:
     // Move point to the backward
     inline float bwdVtx(uint32_t z);
 
+    bool checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y, int32_t z);
+
 private:
     std::vector<float> buffer_;
+    std::shared_ptr<voxels::Chunks> chunks_;
 
     static const uint32_t vertexSize_;
     static const int32_t chunkAttributes_[];

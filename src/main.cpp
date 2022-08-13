@@ -40,7 +40,7 @@ try
     meshes.resize(chunks->Size());
     for (uint32_t i = 0; i < chunks->Size(); ++i)
     {
-        meshes[i] = renderer->Render(chunks->At(i));
+        meshes[i] = renderer->Render(chunks->At(i), chunks);
     }
 
     std::shared_ptr<window::Camera> camera =
