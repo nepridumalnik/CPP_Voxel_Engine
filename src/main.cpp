@@ -36,11 +36,11 @@ try
 
     std::shared_ptr<voxels::Chunks> chunks = std::make_shared<voxels::Chunks>(4, 4, 1);
     std::vector<std::shared_ptr<graphics::Mesh>> meshes;
-    meshes.reserve(chunks->Size());
 
+    meshes.resize(chunks->Size());
     for (uint32_t i = 0; i < chunks->Size(); ++i)
     {
-        meshes.push_back(renderer->Render(chunks->At(i)));
+        meshes[i] = renderer->Render(chunks->At(i));
     }
 
     std::shared_ptr<window::Camera> camera =

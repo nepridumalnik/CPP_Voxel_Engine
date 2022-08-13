@@ -10,8 +10,8 @@ Chunks::Chunks(uint32_t w, uint32_t h, uint32_t d) : w_(w), h_(h), d_(d), volume
 {
     std::vector<std::future<std::shared_ptr<Chunk>>> futures;
 
-    futures.reserve(volume_);
-    chunks_.reserve(volume_);
+    futures.resize(volume_);
+    chunks_.resize(volume_);
 
     for (uint32_t idx = 0, y = 0; y < h_; ++y)
     {
@@ -23,14 +23,14 @@ Chunks::Chunks(uint32_t w, uint32_t h, uint32_t d) : w_(w), h_(h), d_(d), volume
                                               uint32_t z) -> std::shared_ptr<Chunk> {
                     return std::make_shared<Chunk>(x, y, z);
                 };
-                futures.push_back(std::async(std::launch::async, lambda, x, y, z));
+                futures[idx++] = std::async(std::launch::async, lambda, x, y, z);
             }
         }
     }
 
-    for (auto &future : futures)
+    for (uint32_t i = 0; i < futures.size(); ++i)
     {
-        chunks_.push_back(future.get());
+        chunks_[i] = futures[i].get();
     }
 }
 

@@ -25,9 +25,13 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
         future.get();
     }
 
-    return std::make_shared<graphics::Mesh>(buffer_.data(),
-                                            buffer_.size() / VoxelRenderer::vertexSize_,
-                                            VoxelRenderer::chunkAttributes_);
+    std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh>(
+        buffer_.data(), buffer_.size() / VoxelRenderer::vertexSize_,
+        VoxelRenderer::chunkAttributes_);
+
+    buffer_.clear();
+
+    return mesh;
 }
 
 inline VoxelRenderer::Vertex VoxelRenderer::mkVtx(float x, float y, float z, float u, float v,
@@ -40,13 +44,14 @@ void VoxelRenderer::pushFace(const VoxelRenderer::Face &face)
 {
     static std::mutex mtx;
     std::unique_lock lock(mtx);
+    uint32_t size = buffer_.size();
 
-    buffer_.reserve(buffer_.size() + (face.size() * face[0].size()));
+    buffer_.resize(size + (face.size() * face[0].size()));
     for (uint32_t i = 0; i < face.size(); ++i)
     {
         for (uint32_t j = 0; j < face.size(); ++j)
         {
-            buffer_.push_back(face[i][j]);
+            buffer_[size++] = face[i][j];
         }
     }
 }
