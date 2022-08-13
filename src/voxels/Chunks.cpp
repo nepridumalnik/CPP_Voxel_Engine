@@ -1,11 +1,17 @@
 #include <voxels/Chunks.hpp>
 
+#include <future>
+#include <vector>
+
 namespace voxels
 {
 
 Chunks::Chunks(uint32_t w, uint32_t h, uint32_t d) : w_(w), h_(h), d_(d), volume_(w_ * h_ * d_)
 {
-    chunks_.resize(volume_);
+    std::vector<std::future<std::shared_ptr<Chunk>>> futures;
+
+    futures.reserve(volume_);
+    chunks_.reserve(volume_);
 
     for (uint32_t idx = 0, y = 0; y < h_; ++y)
     {
@@ -13,10 +19,18 @@ Chunks::Chunks(uint32_t w, uint32_t h, uint32_t d) : w_(w), h_(h), d_(d), volume
         {
             for (uint32_t x = 0; x < w_; ++x)
             {
-                std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(x, y, z);
-                chunks_[idx++] = chunk;
+                static const auto lambda = [](uint32_t x, uint32_t y,
+                                              uint32_t z) -> std::shared_ptr<Chunk> {
+                    return std::make_shared<Chunk>(x, y, z);
+                };
+                futures.push_back(std::async(std::launch::async, lambda, x, y, z));
             }
         }
+    }
+
+    for (auto &future : futures)
+    {
+        chunks_.push_back(future.get());
     }
 }
 
@@ -27,7 +41,7 @@ uint32_t Chunks::Size()
 
 std::shared_ptr<Chunk> Chunks::At(uint32_t idx)
 {
-    return chunks_.at(idx);
+    return chunks_[idx];
 }
 
 } // namespace voxels

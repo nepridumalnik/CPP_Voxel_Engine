@@ -15,10 +15,6 @@ Chunk::Chunk(uint32_t xPos, uint32_t yPos, uint32_t zPos) : x_(xPos), y_(yPos), 
         {
             for (int32_t x = 0; x < ChunkWidth; ++x)
             {
-                // int32_t worldX = x_ + ChunkWidth;
-                // int32_t worldY = y_ + ChunkHeight;
-                // int32_t worldZ = z_ + ChunkDepth;
-
                 uint32_t id = y <= (sin(x * 0.3f) * 0.5f + 0.5f) * 10;
 
                 if (y <= voxels::BlockType::Last)
@@ -35,7 +31,7 @@ Chunk::Chunk(uint32_t xPos, uint32_t yPos, uint32_t zPos) : x_(xPos), y_(yPos), 
 
 voxel &voxels::Chunk::operator[](uint32_t idx)
 {
-    return voxels_.at(idx);
+    return voxels_[idx];
 }
 
 inline bool Chunk::hasNeighbour(uint32_t x, uint32_t y, uint32_t z)
@@ -51,7 +47,7 @@ inline bool Chunk::hasNeighbour(uint32_t x, uint32_t y, uint32_t z)
 voxel &Chunk::GetVoxel(int32_t x, int32_t y, int32_t z)
 {
     const uint32_t idx = (y * voxels::ChunkDepth + z) * voxels::ChunkWidth + x;
-    return voxels_.at(idx);
+    return voxels_[idx];
 }
 
 int32_t Chunk::GetX()
