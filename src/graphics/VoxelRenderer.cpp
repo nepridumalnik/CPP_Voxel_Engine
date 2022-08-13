@@ -25,7 +25,7 @@ std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk
         future.get();
     }
 
-    return std::make_shared<graphics::Mesh>((float *)(buffer_.data()),
+    return std::make_shared<graphics::Mesh>(buffer_.data(),
                                             buffer_.size() / VoxelRenderer::vertexSize_,
                                             VoxelRenderer::chunkAttributes_);
 }
