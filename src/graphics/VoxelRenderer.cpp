@@ -59,12 +59,12 @@ void VoxelRenderer::pushFace(const VoxelRenderer::Face &face)
 void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t y)
 {
     // Light levels
-    static constexpr LightLevel topFace = 1.0f;
-    static constexpr LightLevel bottomFace = 0.75f;
-    static constexpr LightLevel rightFace = 0.95f;
-    static constexpr LightLevel leftFace = 0.85f;
-    static constexpr LightLevel frontFace = 0.9f;
-    static constexpr LightLevel backFace = 0.8f;
+    static constexpr LightLevel top = 1.0f;
+    static constexpr LightLevel bottom = 0.75f;
+    static constexpr LightLevel right = 0.95f;
+    static constexpr LightLevel left = 0.85f;
+    static constexpr LightLevel front = 0.9f;
+    static constexpr LightLevel back = 0.8f;
 
     LightLevel light = 0;
 
@@ -85,91 +85,85 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
             if (!chunk->hasNeighbour(x, y + 1, z))
             {
-                light = topFace;
                 Face fc;
 
-                fc[0] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, top);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, top);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, top);
 
-                fc[3] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
-                fc[5] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v, light);
+                fc[3] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v, top);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, top);
+                fc[5] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v, top);
 
                 pushFace(fc);
             }
             if (!chunk->hasNeighbour(x, y - 1, z))
             {
-                light = bottomFace;
                 Face fc;
 
-                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[1] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, bottom);
+                fc[1] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, bottom);
+                fc[2] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v + uvsize_, bottom);
 
-                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[4] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, bottom);
+                fc[4] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, bottom);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, bottom);
 
                 pushFace(fc);
             }
             if (!chunk->hasNeighbour(x + 1, y, z))
             {
-                light = rightFace;
                 Face fc;
 
-                fc[0] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, right);
+                fc[1] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, right);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, right);
 
-                fc[3] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
-                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u, v, light);
+                fc[3] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, right);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, right);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u, v, right);
 
                 pushFace(fc);
             }
             if (!chunk->hasNeighbour(x - 1, y, z))
             {
-                light = leftFace;
                 Face fc;
 
-                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, left);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, left);
+                fc[2] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, left);
 
-                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, light);
-                fc[4] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
-                fc[5] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u, v, left);
+                fc[4] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, left);
+                fc[5] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, left);
 
                 pushFace(fc);
             }
             if (!chunk->hasNeighbour(x, y, z + 1))
             {
-                light = frontFace;
                 Face fc;
 
-                fc[0] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
-                fc[1] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, front);
+                fc[1] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, front);
+                fc[2] = mkVtx(lftVtx(x), upVtx(y), bwdVtx(z), u, v + uvsize_, front);
 
-                fc[3] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, light);
-                fc[4] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, light);
-                fc[5] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), bwdVtx(z), u, v, front);
+                fc[4] = mkVtx(rgtVtx(x), downVtx(y), bwdVtx(z), u + uvsize_, v, front);
+                fc[5] = mkVtx(rgtVtx(x), upVtx(y), bwdVtx(z), u + uvsize_, v + uvsize_, front);
 
                 pushFace(fc);
             }
             if (!chunk->hasNeighbour(x, y, z - 1))
             {
-                light = backFace;
                 Face fc;
 
-                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[1] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, light);
-                fc[2] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
+                fc[0] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, back);
+                fc[1] = mkVtx(lftVtx(x), upVtx(y), fwdVtx(z), u + uvsize_, v + uvsize_, back);
+                fc[2] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, back);
 
-                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, light);
-                fc[4] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, light);
-                fc[5] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u, v, light);
+                fc[3] = mkVtx(lftVtx(x), downVtx(y), fwdVtx(z), u + uvsize_, v, back);
+                fc[4] = mkVtx(rgtVtx(x), upVtx(y), fwdVtx(z), u, v + uvsize_, back);
+                fc[5] = mkVtx(rgtVtx(x), downVtx(y), fwdVtx(z), u, v, back);
 
                 pushFace(fc);
             }
