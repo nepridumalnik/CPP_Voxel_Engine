@@ -5,5 +5,4 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
 include(config)
 
 add_subdirectory(src)
-add_subdirectory(shaders)
-add_subdirectory(textures)
+add_subdirectory(resources)
