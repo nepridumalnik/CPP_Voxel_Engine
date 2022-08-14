@@ -13,7 +13,7 @@ const float VoxelRenderer::uvsize_ = 1.0f / VoxelRenderer::atlasElement_;
 const uint32_t VoxelRenderer::vertexSize_ = 3 * 2;
 
 std::shared_ptr<graphics::Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk,
-                                            std::shared_ptr<voxels::Chunks> chunks)
+                                                      std::shared_ptr<voxels::Chunks> chunks)
 {
     std::vector<std::future<void>> futures{voxels::ChunkHeight};
     chunks_ = chunks;
@@ -85,7 +85,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
             const float u = (id % atlasElement_) * uvsize_;
             const float v = 1 - ((1 + id / atlasElement_) * uvsize_);
 
-            if (!checkAllNeighbours(chunk, x, y + 1, z))
+            if (!checkBlockingState(chunk, x, y + 1, z))
             {
                 Face fc;
 
@@ -99,7 +99,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
                 pushFace(fc);
             }
-            if (!checkAllNeighbours(chunk, x, y - 1, z))
+            if (!checkBlockingState(chunk, x, y - 1, z))
             {
                 Face fc;
 
@@ -113,7 +113,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
                 pushFace(fc);
             }
-            if (!checkAllNeighbours(chunk, x + 1, y, z))
+            if (!checkBlockingState(chunk, x + 1, y, z))
             {
                 Face fc;
 
@@ -127,7 +127,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
                 pushFace(fc);
             }
-            if (!checkAllNeighbours(chunk, x - 1, y, z))
+            if (!checkBlockingState(chunk, x - 1, y, z))
             {
                 Face fc;
 
@@ -141,7 +141,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
                 pushFace(fc);
             }
-            if (!checkAllNeighbours(chunk, x, y, z + 1))
+            if (!checkBlockingState(chunk, x, y, z + 1))
             {
                 Face fc;
 
@@ -155,7 +155,7 @@ void VoxelRenderer::generateLayer(std::shared_ptr<voxels::Chunk> chunk, uint32_t
 
                 pushFace(fc);
             }
-            if (!checkAllNeighbours(chunk, x, y, z - 1))
+            if (!checkBlockingState(chunk, x, y, z - 1))
             {
                 Face fc;
 
@@ -203,8 +203,8 @@ inline float VoxelRenderer::bwdVtx(uint32_t z)
     return z + cubeSideSize_;
 }
 
-bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y,
-                                       int32_t z)
+bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y,
+                                    int32_t z)
 {
     const uint32_t w = chunk->GetX();
     const uint32_t h = chunk->GetY();
@@ -213,7 +213,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     // Check vertical
     if (0 > y)
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Down, w, h, d);
+        auto nChunk = chunks_->GetChunk(w, h - 1, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, voxels::ChunkHeight - 1, z).id)
         {
             return true;
@@ -221,7 +221,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (y > (voxels::ChunkHeight - 1))
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Up, w, h, d);
+        auto nChunk = chunks_->GetChunk(w, h + 1, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, 0, z).id)
         {
             return true;
@@ -231,7 +231,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     // Check horizontal
     if (0 > x)
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Left, w, h, d);
+        auto nChunk = chunks_->GetChunk(w - 1, h, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(voxels::ChunkWidth - 1, y, z).id)
         {
             return true;
@@ -239,7 +239,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (x > (voxels::ChunkWidth - 1))
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Right, w, h, d);
+        auto nChunk = chunks_->GetChunk(w + 1, h, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(0, y, z).id)
         {
             return true;
@@ -249,7 +249,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     // Check frontal
     if (0 > z)
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Front, w, h, d);
+        auto nChunk = chunks_->GetChunk(w, h, d - 1);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, y, voxels::ChunkDepth - 1).id)
         {
             return true;
@@ -257,7 +257,7 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (z > (voxels::ChunkDepth - 1))
     {
-        auto nChunk = chunks_->GetNeighbour(voxels::Neighbour::Back, w, h, d);
+        auto nChunk = chunks_->GetChunk(w, h, d + 1);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, y, 0).id)
         {
             return true;

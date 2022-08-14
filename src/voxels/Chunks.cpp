@@ -44,45 +44,16 @@ std::shared_ptr<Chunk> Chunks::At(uint32_t idx)
     return chunks_[idx];
 }
 
-std::shared_ptr<Chunk> Chunks::GetNeighbour(Neighbour n, uint32_t w, uint32_t h, uint32_t d)
+std::shared_ptr<Chunk> Chunks::GetChunk(int32_t x, int32_t y, int32_t z)
 {
-    if (w_ < w || h_ < h || d_ < d)
+    const uint32_t idx = (y * d_ + z) * w_ + x;
+
+    if (chunks_.size() > idx)
     {
-        return nullptr;
+        return chunks_[idx];
     }
 
-    int neighbourChunk;
-
-    switch (n)
-    {
-    case Up:
-        neighbourChunk = ((h + 1) * d_ + d) * w_ + w;
-        break;
-    case Down:
-        neighbourChunk = ((h - 1) * d_ + d) * w_ + w;
-        break;
-    case Left:
-        neighbourChunk = (h * d_ + d) * w_ + w - 1;
-        break;
-    case Right:
-        neighbourChunk = (h * d_ + d) * w_ + w + 1;
-        break;
-    case Front:
-        neighbourChunk = (h * d_ + (d - 1)) * w_ + w;
-        break;
-    case Back:
-        neighbourChunk = (h * d_ + (d + 1)) * w_ + w;
-        break;
-    default:
-        throw std::runtime_error{"Unknown side"};
-    }
-
-    if (neighbourChunk < 0 || neighbourChunk >= chunks_.size())
-    {
-        return nullptr;
-    }
-
-    return chunks_[neighbourChunk];
+    return nullptr;
 }
 
 } // namespace voxels

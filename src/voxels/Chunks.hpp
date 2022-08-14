@@ -8,23 +8,13 @@
 namespace voxels
 {
 
-enum Neighbour : uint8_t
-{
-    Up = 1,
-    Down = 2,
-    Left = 3,
-    Right = 4,
-    Front = 5,
-    Back = 6
-};
-
 class EXPORT Chunks
 {
 public:
     Chunks(uint32_t w, uint32_t h, uint32_t d);
     uint32_t Size();
     std::shared_ptr<Chunk> At(uint32_t idx);
-    std::shared_ptr<Chunk> GetNeighbour(Neighbour n, uint32_t w, uint32_t h, uint32_t d);
+    std::shared_ptr<Chunk> GetChunk(int32_t x, int32_t y, int32_t z);
 
 private:
     std::vector<std::shared_ptr<Chunk>> chunks_;

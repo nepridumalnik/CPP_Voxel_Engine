@@ -21,7 +21,7 @@ private:
 
 public:
     std::shared_ptr<graphics::Mesh> Render(std::shared_ptr<voxels::Chunk> chunk,
-                                 std::shared_ptr<voxels::Chunks> chunks);
+                                           std::shared_ptr<voxels::Chunks> chunks);
 
 private:
     // Async layer generator
@@ -51,7 +51,7 @@ private:
     // Move point to the backward
     inline float bwdVtx(uint32_t z);
 
-    bool checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y, int32_t z);
+    bool checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y, int32_t z);
 
 private:
     std::vector<float> buffer_;
