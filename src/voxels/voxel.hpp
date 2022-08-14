@@ -16,7 +16,8 @@ enum BlockType : uint32_t
 
 struct voxel
 {
-    BlockType id;
+    BlockType id = None;
+    bool modified = false;
 };
 
 } // namespace voxels

@@ -213,7 +213,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     // Check vertical
     if (0 > y)
     {
-        auto nChunk = chunks_->GetChunk(w, h - 1, d);
+        auto nChunk = chunks_->GetChunkByChunksPos(w, h - 1, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, voxels::ChunkHeight - 1, z).id)
         {
             return true;
@@ -221,7 +221,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (y > (voxels::ChunkHeight - 1))
     {
-        auto nChunk = chunks_->GetChunk(w, h + 1, d);
+        auto nChunk = chunks_->GetChunkByChunksPos(w, h + 1, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, 0, z).id)
         {
             return true;
@@ -231,7 +231,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     // Check horizontal
     if (0 > x)
     {
-        auto nChunk = chunks_->GetChunk(w - 1, h, d);
+        auto nChunk = chunks_->GetChunkByChunksPos(w - 1, h, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(voxels::ChunkWidth - 1, y, z).id)
         {
             return true;
@@ -239,7 +239,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (x > (voxels::ChunkWidth - 1))
     {
-        auto nChunk = chunks_->GetChunk(w + 1, h, d);
+        auto nChunk = chunks_->GetChunkByChunksPos(w + 1, h, d);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(0, y, z).id)
         {
             return true;
@@ -249,7 +249,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     // Check frontal
     if (0 > z)
     {
-        auto nChunk = chunks_->GetChunk(w, h, d - 1);
+        auto nChunk = chunks_->GetChunkByChunksPos(w, h, d - 1);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, y, voxels::ChunkDepth - 1).id)
         {
             return true;
@@ -257,7 +257,7 @@ bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int
     }
     else if (z > (voxels::ChunkDepth - 1))
     {
-        auto nChunk = chunks_->GetChunk(w, h, d + 1);
+        auto nChunk = chunks_->GetChunkByChunksPos(w, h, d + 1);
         if (nChunk && voxels::BlockType::None != nChunk->GetVoxel(x, y, 0).id)
         {
             return true;

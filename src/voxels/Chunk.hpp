@@ -21,6 +21,7 @@ public:
     voxel &operator[](uint32_t idx);
     inline bool hasNeighbour(uint32_t x, uint32_t y, uint32_t z);
     voxel &GetVoxel(int32_t x, int32_t y, int32_t z);
+    void SetModified(bool state);
 
     int32_t GetX();
     int32_t GetY();
@@ -28,6 +29,7 @@ public:
 
 private:
     std::array<voxels::voxel, ChunkVolume> voxels_;
+    bool modified_;
 
     const int32_t x_;
     const int32_t y_;

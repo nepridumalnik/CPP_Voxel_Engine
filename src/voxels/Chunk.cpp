@@ -7,7 +7,8 @@
 namespace voxels
 {
 
-Chunk::Chunk(uint32_t xPos, uint32_t yPos, uint32_t zPos) : x_(xPos), y_(yPos), z_(zPos)
+Chunk::Chunk(uint32_t xPos, uint32_t yPos, uint32_t zPos)
+    : x_(xPos), y_(yPos), z_(zPos), modified_(false)
 {
     for (int32_t y = 0; y < ChunkHeight; ++y)
     {
@@ -63,6 +64,11 @@ int32_t Chunk::GetY()
 int32_t Chunk::GetZ()
 {
     return z_;
+}
+
+void Chunk::SetModified(bool state)
+{
+    modified_ = state;
 }
 
 } // namespace voxels
