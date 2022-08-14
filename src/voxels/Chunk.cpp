@@ -1,6 +1,6 @@
 #include <voxels/Chunk.hpp>
 
-#include <voxels/voxel.hpp>
+#include <voxel.hpp>
 
 #include <cmath>
 
