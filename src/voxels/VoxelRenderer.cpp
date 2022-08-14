@@ -3,7 +3,7 @@
 #include <future>
 #include <mutex>
 
-namespace graphics
+namespace voxels
 {
 
 const int32_t VoxelRenderer::chunkAttributes_[] = {3, 2, 1, 0};
@@ -12,7 +12,7 @@ const float VoxelRenderer::cubeSideSize_ = 0.5f;
 const float VoxelRenderer::uvsize_ = 1.0f / VoxelRenderer::atlasElement_;
 const uint32_t VoxelRenderer::vertexSize_ = 3 * 2;
 
-std::shared_ptr<Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk,
+std::shared_ptr<graphics::Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Chunk> chunk,
                                             std::shared_ptr<voxels::Chunks> chunks)
 {
     std::vector<std::future<void>> futures{voxels::ChunkHeight};
@@ -269,4 +269,4 @@ bool VoxelRenderer::checkAllNeighbours(std::shared_ptr<voxels::Chunk> chunk, int
     return chunk->hasNeighbour(x, y, z);
 }
 
-} // namespace graphics
+} // namespace voxels

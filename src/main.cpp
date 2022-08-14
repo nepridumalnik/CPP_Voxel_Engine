@@ -32,8 +32,8 @@ try
 
     std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("block.png");
-    std::shared_ptr<graphics::VoxelRenderer> renderer = std::make_shared<graphics::VoxelRenderer>();
 
+    std::shared_ptr<voxels::VoxelRenderer> renderer = std::make_shared<voxels::VoxelRenderer>();
     std::shared_ptr<voxels::Chunks> chunks = std::make_shared<voxels::Chunks>(4, 4, 1);
     std::vector<std::shared_ptr<graphics::Mesh>> meshes;
 

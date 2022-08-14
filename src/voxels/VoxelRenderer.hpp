@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace graphics
+namespace voxels
 {
 
 class EXPORT VoxelRenderer
@@ -20,7 +20,7 @@ private:
     using LightLevel = float;
 
 public:
-    std::shared_ptr<Mesh> Render(std::shared_ptr<voxels::Chunk> chunk,
+    std::shared_ptr<graphics::Mesh> Render(std::shared_ptr<voxels::Chunk> chunk,
                                  std::shared_ptr<voxels::Chunks> chunks);
 
 private:
@@ -65,4 +65,4 @@ private:
     static const float uvsize_;
 };
 
-} // namespace graphics
+} // namespace voxels
