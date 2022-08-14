@@ -204,7 +204,7 @@ inline float VoxelRenderer::bwdVtx(uint32_t z)
 }
 
 bool VoxelRenderer::checkBlockingState(std::shared_ptr<voxels::Chunk> chunk, int32_t x, int32_t y,
-                                    int32_t z)
+                                       int32_t z)
 {
     const uint32_t w = chunk->GetX();
     const uint32_t h = chunk->GetY();

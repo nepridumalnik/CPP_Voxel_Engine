@@ -44,8 +44,13 @@ std::shared_ptr<Chunk> Chunks::At(uint32_t idx)
     return chunks_[idx];
 }
 
-std::shared_ptr<Chunk> Chunks::GetChunk(int32_t x, int32_t y, int32_t z)
+std::shared_ptr<Chunk> Chunks::GetChunk(uint32_t x, uint32_t y, uint32_t z)
 {
+    if (x > w_ || y > h_)
+    {
+        return nullptr;
+    }
+
     const uint32_t idx = (y * d_ + z) * w_ + x;
 
     if (chunks_.size() > idx)
