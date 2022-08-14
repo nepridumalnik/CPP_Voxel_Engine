@@ -1,4 +1,4 @@
-#include <graphics/VoxelRenderer.hpp>
+#include <voxels/VoxelRenderer.hpp>
 
 #include <future>
 #include <mutex>

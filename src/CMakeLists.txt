@@ -5,7 +5,7 @@ set(EXECUTABLE_SOURCES
     main.cpp
 )
 
-set(LIBRARY_SOURCES
+set(ENGINE_SOURCES
     # engine
     # window
     window/Window.cpp
@@ -16,15 +16,16 @@ set(LIBRARY_SOURCES
     graphics/Shader.cpp
     graphics/Texture.cpp
     graphics/Mesh.cpp
-    graphics/VoxelRenderer.cpp
 
+    # utils
+    utils/loaders.cpp
+)
+set(VOXELS_SOURCES
     # voxels
     voxels/voxel.cpp
     voxels/Chunk.cpp
     voxels/Chunks.cpp
-
-    # utils
-    utils/loaders.cpp
+    voxels/VoxelRenderer.cpp
 )
 set(PRECOMPILE_HEADERS
     ${CMAKE_SOURCE_DIR}/src/utils/macros.hpp
@@ -39,10 +40,14 @@ set(LIBRARIES
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(${TARGET} SHARED ${LIBRARY_SOURCES})
+add_library(${TARGET} SHARED ${ENGINE_SOURCES})
 target_precompile_headers(${TARGET} PRIVATE ${PRECOMPILE_HEADERS})
-target_link_libraries(${TARGET} ${LIBRARIES})
+target_link_libraries(${TARGET} PUBLIC ${LIBRARIES})
+
+add_library(Voxels SHARED ${VOXELS_SOURCES})
+target_precompile_headers(Voxels REUSE_FROM ${TARGET})
+target_link_libraries(Voxels PUBLIC ${TARGET})
 
 add_executable(main ${EXECUTABLE_SOURCES})
 target_precompile_headers(main REUSE_FROM ${TARGET})
-target_link_libraries(main ${TARGET} ${LIBRARIES})
+target_link_libraries(main ${TARGET} ${LIBRARIES} Voxels)

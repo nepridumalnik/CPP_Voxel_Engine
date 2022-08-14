@@ -1,7 +1,6 @@
 #include <graphics/Mesh.hpp>
 #include <graphics/Shader.hpp>
 #include <graphics/Texture.hpp>
-#include <graphics/VoxelRenderer.hpp>
 
 #include <window/Camera.hpp>
 #include <window/Events.hpp>
@@ -9,6 +8,7 @@
 
 #include <voxels/Chunk.hpp>
 #include <voxels/Chunks.hpp>
+#include <voxels/VoxelRenderer.hpp>
 #include <voxels/voxel.hpp>
 
 #include <utils/loaders.hpp>
