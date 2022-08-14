@@ -16,6 +16,18 @@
 #include <iostream>
 #include <vector>
 
+static constexpr float Vertices[] = {
+    -0.01f, -0.01f, // 1
+    0.01f,  0.01f,  // 2
+
+    -0.01f, 0.01f,  // 3
+    0.01f,  -0.01f, // 4
+};
+
+int32_t Attributes[] = {
+    2, 0 // null terminator
+};
+
 int32_t main(int32_t argc, char const *argv[])
 try
 {
@@ -29,6 +41,11 @@ try
     window::Window::SetClearColor(0.27f, 0.27f, 0.27f, 1);
 
     window::Events::Init();
+
+    std::shared_ptr<graphics::Shader> crosshairShader =
+        graphics::LoadShader("crosshair.vert", "crosshair.frag");
+    std::shared_ptr<graphics::Mesh> crosshairMesh =
+        std::make_shared<graphics::Mesh>(Vertices, sizeof(Vertices) / sizeof(float), Attributes);
 
     std::shared_ptr<graphics::Shader> shader = graphics::LoadShader("main.vert", "main.frag");
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("block.png");
@@ -133,6 +150,9 @@ try
             shader->UniformMatrix("model", model);
             mesh->Draw(GL_TRIANGLES);
         }
+
+        crosshairShader->Use();
+        crosshairMesh->Draw(GL_LINES);
 
         window::Window::SwapBuffer();
         window::Events::PollEvents();
