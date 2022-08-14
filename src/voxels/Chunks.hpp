@@ -24,7 +24,7 @@ public:
                                              glm::vec3 &end, glm::vec3 &norm, glm::vec3 &iend);
 
     // АЛгоритм целиком спизжен, не понимаю что происходит
-    void SetVoxelByCoord(uint32_t x, uint32_t y, uint32_t z, BlockType type);
+    void SetVoxelByCoord(int32_t x, int32_t y, int32_t z, BlockType type);
 
 private:
     std::vector<std::shared_ptr<Chunk>> chunks_;

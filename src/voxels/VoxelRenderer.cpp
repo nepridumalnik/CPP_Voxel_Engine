@@ -20,8 +20,7 @@ std::shared_ptr<graphics::Mesh> VoxelRenderer::Render(std::shared_ptr<voxels::Ch
 
     for (uint32_t y = 0; y < voxels::ChunkHeight; ++y)
     {
-        futures[y] =
-            std::async(std::launch::deferred, &VoxelRenderer::generateLayer, this, chunk, y);
+        futures[y] = std::async(std::launch::async, &VoxelRenderer::generateLayer, this, chunk, y);
     }
     for (auto &future : futures)
     {

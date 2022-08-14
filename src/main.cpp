@@ -36,6 +36,8 @@ try
     static constexpr float speed = 5.0f;
     static constexpr float rotationLimit = 89.99f;
     static constexpr float mouseSpeed = 0.8f;
+    static constexpr float epsilon = 0.5f;
+    static constexpr float touchLength = 5.0f;
 
     window::Window::Init(width, height, "Window");
     window::Window::SetClearColor(0.27f, 0.27f, 0.27f, 1);
@@ -51,14 +53,9 @@ try
     std::shared_ptr<graphics::Texture> texture = graphics::LoadTexture("block.png");
 
     std::shared_ptr<voxels::VoxelRenderer> renderer = std::make_shared<voxels::VoxelRenderer>();
-    std::shared_ptr<voxels::Chunks> chunks = std::make_shared<voxels::Chunks>(4, 4, 1);
+    std::shared_ptr<voxels::Chunks> chunks = std::make_shared<voxels::Chunks>(1, 1, 1);
     std::vector<std::shared_ptr<graphics::Mesh>> meshes;
-
     meshes.resize(chunks->Size());
-    for (uint32_t i = 0; i < chunks->Size(); ++i)
-    {
-        meshes[i] = renderer->Render(chunks->At(i), chunks);
-    }
 
     std::shared_ptr<window::Camera> camera =
         std::make_shared<window::Camera>(glm::vec3(0.0f, 0.0f, 20.0f), glm::radians(75.0f));
@@ -132,6 +129,26 @@ try
             camera->Rotate(camX, camY, 0);
         }
 
+        glm::vec3 end;
+        glm::vec3 norm;
+        glm::vec3 iend;
+
+        auto vox = chunks->RayCast(camera->GetPosition(), camera->GetFront(), touchLength, end,
+                                   norm, iend);
+
+        if (std::nullopt != vox)
+        {
+            if (window::Events::JClicked(GLFW_MOUSE_BUTTON_1))
+            {
+                chunks->SetVoxelByCoord(iend.x, iend.y, iend.z, voxels::BlockType::None);
+            }
+            else if (window::Events::JClicked(GLFW_MOUSE_BUTTON_2))
+            {
+                chunks->SetVoxelByCoord(iend.x + norm.x, iend.y + norm.y, iend.z + norm.z,
+                                        voxels::BlockType::Dirt);
+            }
+        }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->Use();
@@ -140,13 +157,22 @@ try
 
         for (uint32_t i = 0; i < chunks->Size(); ++i)
         {
+            std::shared_ptr<voxels::Chunk> chunk = chunks->At(i);
+            if (chunk->RequireUpdate())
+            {
+                meshes[i] = renderer->Render(chunk, chunks);
+            }
+        }
+
+        for (uint32_t i = 0; i < chunks->Size(); ++i)
+        {
             glm::mat4 model(1.0f);
             std::shared_ptr<voxels::Chunk> chunk = chunks->At(i);
             std::shared_ptr<graphics::Mesh> mesh = meshes.at(i);
 
-            model = glm::translate(model, glm::vec3(chunk->GetX() * voxels::ChunkWidth,
-                                                    chunk->GetZ() * voxels::ChunkDepth,
-                                                    chunk->GetY() * voxels::ChunkHeight));
+            model = glm::translate(model, glm::vec3(chunk->GetX() * voxels::ChunkWidth + epsilon,
+                                                    chunk->GetZ() * voxels::ChunkDepth + epsilon,
+                                                    chunk->GetY() * voxels::ChunkHeight + epsilon));
             shader->UniformMatrix("model", model);
             mesh->Draw(GL_TRIANGLES);
         }

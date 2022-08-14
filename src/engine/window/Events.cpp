@@ -47,7 +47,8 @@ void Events::mouseCallback(GLFWwindow *window, int32_t button, int32_t action, i
     }
 }
 
-void Events::keyCallback(GLFWwindow *window, int32_t key, int32_t scancode, int32_t action, int32_t mods)
+void Events::keyCallback(GLFWwindow *window, int32_t key, int32_t scancode, int32_t action,
+                         int32_t mods)
 {
     switch (action)
     {
@@ -80,7 +81,7 @@ void Events::PollEvents()
 
 bool Events::Pressed(int32_t key)
 {
-    if (!key || key >= NumberOfKeys)
+    if (NumberOfKeys < key && key >= 0)
     {
         return false;
     }
@@ -90,12 +91,33 @@ bool Events::Pressed(int32_t key)
 
 bool Events::JPressed(int32_t key)
 {
-    if (!key || key >= NumberOfKeys)
+    if (NumberOfKeys < key && key >= 0)
     {
         return false;
     }
 
     return Events::keys_[key].first && Events::current_ == Events::keys_[key].second;
+}
+
+bool Events::Clicked(int32_t key)
+{
+    if (MouseButtons < key && key >= 0)
+    {
+        return false;
+    }
+
+    return Events::mouseButtons_[key].first;
+}
+
+bool Events::JClicked(int32_t key)
+{
+    if (MouseButtons < key && key >= 0)
+    {
+        return false;
+    }
+
+    return Events::mouseButtons_[key].first &&
+           Events::current_ == Events::mouseButtons_[key].second;
 }
 
 float Events::GetDeltaX()

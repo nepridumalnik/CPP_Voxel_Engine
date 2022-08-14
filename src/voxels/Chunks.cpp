@@ -63,41 +63,37 @@ std::shared_ptr<Chunk> Chunks::GetChunkByChunksPos(uint32_t x, uint32_t y, uint3
 
 Chunks::NullableReference<voxels::voxel> Chunks::GetVoxelByCoord(uint32_t x, uint32_t y, uint32_t z)
 {
-    int32_t cx = x / ChunkWidth;
-    int32_t cy = y / ChunkHeight;
-    int32_t cz = z / ChunkDepth;
+    int cx = x / ChunkWidth;
+    int cy = y / ChunkHeight;
+    int cz = z / ChunkDepth;
 
     if (x < 0)
     {
-        --cx;
+        cx--;
     }
     if (y < 0)
     {
-        --cy;
+        cy--;
     }
     if (z < 0)
     {
-        --cz;
+        cz--;
     }
-
     if (cx < 0 || cy < 0 || cz < 0 || cx >= w_ || cy >= h_ || cz >= d_)
     {
         return {};
     }
 
-    const uint32_t chunkIdx = (cy * d_ + cz) * w_ + cx;
-    std::shared_ptr<Chunk> chunk = chunks_[chunkIdx];
+    auto chunk = chunks_[(cy * d_ + cz) * w_ + cx];
 
-    const uint32_t lx = x - cx * ChunkWidth;
-    const uint32_t ly = y - cy * ChunkHeight;
-    const uint32_t lz = z - cz * ChunkDepth;
-
-    // const uint32_t voxelIdx = (ly * ChunkDepth + lz) * ChunkWidth + lx;
+    int lx = x - cx * ChunkWidth;
+    int ly = y - cy * ChunkHeight;
+    int lz = z - cz * ChunkDepth;
 
     return chunk->GetVoxel(lx, ly, lz);
 }
 
-void Chunks::SetVoxelByCoord(uint32_t x, uint32_t y, uint32_t z, BlockType type)
+void Chunks::SetVoxelByCoord(int32_t x, int32_t y, int32_t z, BlockType type)
 {
     int32_t cx = x / ChunkWidth;
     int32_t cy = y / ChunkHeight;
@@ -128,30 +124,33 @@ void Chunks::SetVoxelByCoord(uint32_t x, uint32_t y, uint32_t z, BlockType type)
     const uint32_t ly = y - cy * ChunkHeight;
     const uint32_t lz = z - cz * ChunkDepth;
 
+    chunk->GetVoxel(lx, ly, lz).id = type;
+    chunk->SetModified();
+
     if (0 == lx && (chunk = GetChunkByChunksPos(cx - 1, cy, cz)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
     if (0 == ly && (chunk = GetChunkByChunksPos(cx, cy - 1, cz)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
     if (0 == lz && (chunk = GetChunkByChunksPos(cx, cy, cz - 1)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
 
     if ((ChunkWidth - 1) == lx && (chunk = GetChunkByChunksPos(cx + 1, cy, cz)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
     if ((ChunkHeight - 1) == ly && (chunk = GetChunkByChunksPos(cx, cy + 1, cz)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
     if ((ChunkDepth - 1) == lz && (chunk = GetChunkByChunksPos(cx, cy, cz + 1)))
     {
-        chunk->SetModified(true);
+        chunk->SetModified();
     }
 }
 
@@ -171,32 +170,32 @@ Chunks::NullableReference<voxels::voxel> Chunks::RayCast(glm::vec3 a, glm::vec3 
                                                          glm::vec3 &end, glm::vec3 &norm,
                                                          glm::vec3 &iend)
 {
-    const float px = a.x;
-    const float py = a.y;
-    const float pz = a.z;
+    float px = a.x;
+    float py = a.y;
+    float pz = a.z;
 
-    const float dx = dir.x;
-    const float dy = dir.y;
-    const float dz = dir.z;
+    float dx = dir.x;
+    float dy = dir.y;
+    float dz = dir.z;
 
     float t = 0.0f;
     int ix = floor(px);
     int iy = floor(py);
     int iz = floor(pz);
 
-    const float stepx = (dx > 0.0f) ? 1.0f : -1.0f;
-    const float stepy = (dy > 0.0f) ? 1.0f : -1.0f;
-    const float stepz = (dz > 0.0f) ? 1.0f : -1.0f;
+    float stepx = (dx > 0.0f) ? 1.0f : -1.0f;
+    float stepy = (dy > 0.0f) ? 1.0f : -1.0f;
+    float stepz = (dz > 0.0f) ? 1.0f : -1.0f;
 
-    const float infinity = std::numeric_limits<float>::infinity();
+    float infinity = std::numeric_limits<float>::infinity();
 
-    const float txDelta = (dx == 0.0f) ? infinity : abs(1.0f / dx);
-    const float tyDelta = (dy == 0.0f) ? infinity : abs(1.0f / dy);
-    const float tzDelta = (dz == 0.0f) ? infinity : abs(1.0f / dz);
+    float txDelta = (dx == 0.0f) ? infinity : abs(1.0f / dx);
+    float tyDelta = (dy == 0.0f) ? infinity : abs(1.0f / dy);
+    float tzDelta = (dz == 0.0f) ? infinity : abs(1.0f / dz);
 
-    const float xdist = (stepx > 0) ? (ix + 1 - px) : (px - ix);
-    const float ydist = (stepy > 0) ? (iy + 1 - py) : (py - iy);
-    const float zdist = (stepz > 0) ? (iz + 1 - pz) : (pz - iz);
+    float xdist = (stepx > 0) ? (ix + 1 - px) : (px - ix);
+    float ydist = (stepy > 0) ? (iy + 1 - py) : (py - iy);
+    float zdist = (stepz > 0) ? (iz + 1 - pz) : (pz - iz);
 
     float txMax = (txDelta < infinity) ? txDelta * xdist : infinity;
     float tyMax = (tyDelta < infinity) ? tyDelta * ydist : infinity;
@@ -207,7 +206,7 @@ Chunks::NullableReference<voxels::voxel> Chunks::RayCast(glm::vec3 a, glm::vec3 
     while (t <= maxDist)
     {
         auto vox = GetVoxelByCoord(ix, iy, iz);
-        if (vox || BlockType::None == vox->get().id)
+        if (vox != std::nullopt && vox->get().id)
         {
             end.x = px + t * dx;
             end.y = py + t * dy;
@@ -218,19 +217,12 @@ Chunks::NullableReference<voxels::voxel> Chunks::RayCast(glm::vec3 a, glm::vec3 
             iend.z = iz;
 
             norm.x = norm.y = norm.z = 0.0f;
-
             if (steppedIndex == 0)
-            {
                 norm.x = -stepx;
-            }
             if (steppedIndex == 1)
-            {
                 norm.y = -stepy;
-            }
             if (steppedIndex == 2)
-            {
                 norm.z = -stepz;
-            }
 
             return vox;
         }
@@ -269,7 +261,6 @@ Chunks::NullableReference<voxels::voxel> Chunks::RayCast(glm::vec3 a, glm::vec3 
             }
         }
     }
-
     iend.x = ix;
     iend.y = iy;
     iend.z = iz;
